@@ -4,7 +4,7 @@ import { SelectInput, TextInput } from './DashboardAddProduct'
 
 const Profile = () => {
   return (
-    <div className='ml-[15%] mr-[5%] bg-[#1100770A] h-[100vh]'>
+    <div className={`${window.innerWidth > 768 ? `ml-[15%]`: `ml-[10%]`} mr-[5%] bg-[#1100770A] h-[100vh]`}>
         <div className='mx-[3%]'>
             <div className="flex items-center justify-between">
                 <div className='py-[1%]'>
@@ -20,7 +20,7 @@ const Profile = () => {
                     <h3 className='text-[1.3rem] font-[500] text-[#fff]'>Dahunsi Temitope</h3>
                 </div>
             </div>
-            <div className=' py-[2%] px-[1%] rounded-md grid grid-cols-2 grid-rows-4 gap-x-8'>
+            <div className=' py-[2%] px-[1%] rounded-md lg:grid grid-cols-2 grid-rows-4 gap-x-8 mt-[15%] lg:mt-[0%]'>
                 <TextInput label='Email Address' placeholder='DahunsiTemmyforgood@gmail.com' type='email'/>
                 <TextInput label='Account Name' placeholder='Dahunsi Temitope' />
                 <TextInput label='Company Name' placeholder='EasyGadgets' />
@@ -31,7 +31,7 @@ const Profile = () => {
                 <SelectInput label='Country' value='Nigeria' />
             </div>
             <div className='flex justify-end'>
-                <Link to="/dashboard/product" className='bg-[#533AE9] w-[10%] h-[5vh] text-[#fff] rounded-md flex justify-center items-center'>Edit</Link>
+                <Link to="/dashboard/product" className='bg-[#533AE9] w-[50%] lg:w-[10%] h-[5vh] text-[#fff] rounded-md flex justify-center items-center'>Edit</Link>
             </div>
         </div>
        

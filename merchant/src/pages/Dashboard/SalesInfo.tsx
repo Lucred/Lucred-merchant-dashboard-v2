@@ -13,25 +13,29 @@ const SalesInfo = () => {
         setShowModal(!showModal)
     }
   return (
-    <div className='ml-[15%] mr-[5%] bg-[#1100770A] h-[100vh]'>
+    <div className={`${window.innerWidth > 768 ? `ml-[15%]`: `ml-[10%]`} mr-[5%] bg-[#1100770A] h-[100vh] `}>
         <div className='mx-[3%]'>
             <div className="flex items-center justify-between">
                 <div className='py-[1%]'>
                     <p className='text-[0.7rem]'>Dashboard/Product</p>
                     <h3 className='text-[1.3rem] font-[500]'>Sales Info</h3>
                 </div>
-                {location.pathname=== "/dashboard/sales-info" ? <Link to="" className='bg-[#533AE9] w-[15%] h-[5vh] text-[#fff] mr-[5%] rounded-md flex justify-center items-center' onClick={toggleModal}>Withdraw</Link>: null}
+                {location.pathname=== "/dashboard/sales-info" ? <Link to="" className='bg-[#533AE9] lg:w-[15%] w-[50%] h-[5vh] text-[#fff] mr-[5%] rounded-md flex justify-center items-center' onClick={toggleModal}>Withdraw</Link>: null}
 
             </div>
-            <div className="flex justify-between">
-                <div className="w-[45%] flex justify-between">
-                    <AnalyticCard width={`w-[45%]`}  />
-                    <AnalyticCard width={`w-[45%]`}  />
+            <div className="flex lg:flex-row flex-col justify-between my-[3%] lg:my-[0%]">
+                <div className=" w-[100%] overflow-scroll">
+                    <div className="lg:w-[65%] md:w-[100%] w-[150%] flex justify-between ">
+                        <AnalyticCard width={`w-[45%]`}  />
+                        <AnalyticCard width={`w-[45%]`}  />
+                    </div>
+
                 </div>
-                <SelectInput  width={`w-[30%]`} value={`Today (March 18, 2022)`}/>
+               
+                <SelectInput  width={`lg:w-[30%] md:w-[50%]`} value={`Today (March 18, 2022)`}/>
             </div>
-
-            <table className=' w-[100%] border rounded-md my-[2%]'>
+            <div className="w-[100%] overflow-scroll">
+                <table className=' w-[100%] border rounded-md my-[2%] w-[250%]'>
                     <thead  >
                     <tr className='bg-[#1100770A] text-[0.8rem]  text-[#56555B] w-[100%] px-[5%] bg-[#fff]'>
                         <th className='font-[400] py-[1%]'>ID</th>
@@ -109,6 +113,9 @@ const SalesInfo = () => {
                     </tr>
                     </tbody>
                 </table>
+
+            </div>
+           
         </div>
 
        {showModal ? <WithdrawModal func={toggleModal} /> : null}
@@ -120,8 +127,8 @@ export default SalesInfo
 
 export const WithdrawModal = ({func}:any) =>{
     return (
-        <div className=" fixed h-[100vh] w-[100%] bg-[#17151599] top-[0] flex items-center justify-center">
-            <div className="bg-[#fff] w-[40%] rounded-md ">
+        <div className=" fixed h-[100vh] w-[100%] bg-[#17151599] top-[0] left-[0] flex items-center justify-center">
+            <div className="bg-[#fff] lg:w-[40%] w-[80%] rounded-md ">
                 <div className="bg-[#1100770A] px-[3%] py-[2%] flex justify-between items-center">
                     <h3>Withdrawal Request</h3>
                     <img src={xmark} alt="" className="h-[2vh]" onClick={func}/>

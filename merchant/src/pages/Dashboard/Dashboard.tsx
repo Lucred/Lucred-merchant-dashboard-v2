@@ -6,12 +6,14 @@ import DashboardAddProduct from './DashboardAddProduct'
 import SalesInfo from './SalesInfo'
 import Profile from './Profile'
 import UserReport from './UserReport'
+import Settings from './Settings'
 
 const Dashboard = () => {
+  
   return (
-    <div>
+    <div >
         <Sidebar />
-        <div className='ml-[15%] mr-[5%] bg-[#1100770A]'>
+        <div className={`${window.innerWidth > 768 ? `ml-[15%]`:`ml-[10%]`} mr-[5%] bg-[#1100770A]`}>
           <DashNav />
         </div>
         
@@ -22,6 +24,7 @@ const Dashboard = () => {
             <Route path="/sales-info" element={<SalesInfo />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/customer-report" element={<UserReport />} />
+            <Route path="/settings" element={<Settings />} />
 
         </Routes>
 
