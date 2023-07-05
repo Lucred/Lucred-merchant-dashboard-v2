@@ -4,9 +4,30 @@ import apple from '../assets/apple.png'
 import huawei from '../assets/huawei.png'
 import alcatel from '../assets/alcatel.png'
 import loginImg from '../assets/loginImg.png'
+import { useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { loginUser } from '../redux/actions'
 
 const Login = () => {
-  return (
+    const [formData, setFormData] = useState<any>({
+        email:"",
+        password:""
+    })
+
+    const handleChange = (e:any) => {
+        setFormData(
+            {...formData, [e.target.name]:e.target.value}
+        )
+    }
+
+    const dispatch = useDispatch() as unknown as any
+
+    const handleSubmit = (e:any) => {
+        e.preventDefault()
+        console.log("Form submitted", formData)
+        dispatch(loginUser(formData))
+    }
+   return (
     <div className='flex lg:flex-row flex-col justify-between px-[5%] py-[3%] h-[100vh] '>
         <div className='xl:w-[50%] lg:w-[60%]  py-[5%] pl-[5%] lg:block flex flex-col items-center justify-center'>
             <img src={lucred} alt="Lucred" />
@@ -17,11 +38,11 @@ const Login = () => {
                 </div>
                 <div className='text-left my-[2%]' >
                     <label className='text-[#171515]'>Email</label><br></br>
-                    <input type="text" placeholder="Enter your email" className='border rounded-md w-[100%] lg:w-[70%] pl-[5%] py-[1%]' />
+                    <input type="text" name="email" placeholder="Enter your email" className='border rounded-md w-[100%] lg:w-[70%] pl-[5%] py-[1%]' onChange={handleChange} />
                 </div>
                 <div  className='text-left'>
                     <label>Password</label><br></br>
-                    <input type="password" placeholder="Enter your password" className='border rounded-md w-[100%] lg:w-[70%] pl-[5%] py-[1%]' />
+                    <input type="password" name="password" placeholder="Enter your password" className='border rounded-md w-[100%] lg:w-[70%] pl-[5%] py-[1%]' onChange={handleChange} />
                 </div>
                 <div className='flex justify-between items-center w-[100%] lg:w-[70%] my-[2%]'>
                     <div className=' flex w-[35%] justify-between items-center'>
@@ -30,7 +51,7 @@ const Login = () => {
                     </div>
                     <p>Forgot password?</p> 
                 </div>
-                <button className='bg-[#533AE9] text-white rounded-md w-[70%]'>Sign in</button>
+                <button className='bg-[#533AE9] text-white rounded-md w-[70%]' onClick={handleSubmit} onKeyDown={handleSubmit}>Sign in</button>
                 <p className=' text-center lg:w-[70%] my-[3%]'>Want to become a Merchant? Sign up</p> 
                 <div className='flex items-center mt-[10%]'>
                     <img src={mi} alt="mi" />

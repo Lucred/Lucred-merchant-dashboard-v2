@@ -6,13 +6,26 @@ import revenue from "../../assets/revenue.png";
 import ladyBag from "../../assets/ladybag.png";
 import seemore from "../../assets/seemore.png";
 import Help from "./Help";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getMerchant } from "../../redux/actions";
 
 const DashboardHome = () => {
   const [showHelp, setShowHelp] = useState(false)
+
+  const merchant = useSelector((state:any) => state.merchant)
+
+  const dispatch = useDispatch() as unknown as any
+  const id  = localStorage.getItem('userId') as unknown as string
+
+  console.log(merchant)
+
+  useEffect(() => {
+    dispatch(getMerchant(id))
+  },[])
   
   return (
-    <div className={`${window.innerWidth > 768 ? `ml-[15%]`: `ml-[10%]`} mr-[5%] bg-[#1100770A] h-[100vh] `}>
+    <div className={`${window.innerWidth > 768 ? `ml-[15%]`: `ml-[10%]`} mr-[5%] bg-[#1100770A] lg:h-[100vh]  `}>
       <div className="mx-[3%] ">
         <div className="w-[100%] overflow-x-scroll">
           <div className="flex justify-between items-center py-[1%] w-[250%] lg:w-[100%] ">
@@ -51,7 +64,7 @@ const DashboardHome = () => {
         </div>
         
         <div className=" w-[100%] overflow-x-scroll">
-          <div className="flex justify-between w-[250%] lg:w-[100%] ">
+          <div className="flex justify-between w-[250%] lg:w-[100%] my-[5%] lg:my-[0%] ">
             <AnalyticCard width={`w-[23%]`} />
             <AnalyticCard width={`w-[23%]`} />
             <AnalyticCard width={`w-[23%]`} />
@@ -61,11 +74,15 @@ const DashboardHome = () => {
         </div>
         
         <div className=" flex flex-col lg:flex-row items-center justify-between ">
+          <div className="my-[3%] lg:my-[0%] w-[100%]">
           <TransactionTable />
+          </div>
+          <div className="my-[3%] lg:my-[0%] w-[100%] ">
           <TopProduct />
-          <div>
+          </div>
+          <div className="my-[3%] w-[50%] flex justify-center lg:justify-end ">
             <img src={seemore} alt="" className="h-[30vh]" />
-            <button className="text-[#533AE9] absolute bg-[#fff] bottom-[-5%] md:top-[50%] ml-[3%] h-[5vh]">
+            <button className="text-[#533AE9]  absolute bg-[#fff] lg:bottom-[-5%] md:bottom-[-42%] bottom-[-18%]  lg:top-[50%]   lg:mr-[3%] h-[7vh]">
               See More
             </button>
           </div>
@@ -136,7 +153,7 @@ export const AnalyticCard = ({ width }: any) => {
 
 const TransactionTable = () => {
   return (
-    <div className="bg-[#fff] w-[100%] lg:w-[40%] py-[2%] px-[2%] my-[2%] rounded-md">
+    <div className="bg-[#fff] w-[100%]  py-[2%] px-[2%] my-[2%] rounded-md">
       <div className="pb-[2%]">
         <h3 className="text-[#000000] font-[500]">Top Transaction</h3>
         <p className="text-[#9C9AA4] text-[0.8rem]">
@@ -181,7 +198,7 @@ const TransactionTable = () => {
 
 const TopProduct = () => {
   return (
-    <div className="bg-[#fff] w-[100%] md:w-[30%] rounded-md py-[2%] px-[2%]">
+    <div className="bg-[#fff] w-[100%] md:w-[50%] lg:w-[80%] rounded-md py-[2%] px-[2%] mx-[auto]">
       <div className="pb-[2%]">
         <h3 className="text-[#000000] font-[500]">Top Product</h3>
         <p className="text-[#9C9AA4] text-[0.8rem]">

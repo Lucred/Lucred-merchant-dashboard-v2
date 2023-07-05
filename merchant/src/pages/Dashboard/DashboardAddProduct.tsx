@@ -71,7 +71,7 @@ export const TextInput = ({label, placeholder, type, name, value, onChange, erro
     return (
         <div className='flex flex-col py-[2%]'>
             <label htmlFor={label} className='text-[0.9rem] text-[#110077] '>{label}</label>
-            <input type={type} name={name} id={label} placeholder={placeholder} value={value} onChange={onChange} className='border border-[#11007766] rounded-md h-[4vh] px-[2%] outline-none' />
+            <input type={type} name={name} id={label} placeholder={placeholder} value={value} onChange={onChange} className='border border-[#11007766] rounded-md h-[6vh] lg:h-[4vh] px-[2%] outline-none' />
             {error && <p className='text-[0.7rem] text-[#8C858D]'>{error}</p>}
         </div>
     )
@@ -82,7 +82,7 @@ export const SelectInput = ({label, placeholder, type, name, value, onChange, wi
     return(
         <div className={`flex flex-col ${width} py-[2%]`}>
            <label htmlFor={label} className='text-[0.9rem] text-[#110077] '>{label}</label>
-           <select className={`border border-[#11007766] rounded-md h-[4vh] px-[2%] outline-none w-[100%] ${location.pathname === "/dashboard/sales-info" ? `bg-[transparent]` : null}`} >
+           <select className={`border border-[#11007766] rounded-md px-[2%] outline-none w-[100%] h-[6vh] lg:h-[4vh] ${location.pathname === "/dashboard/sales-info" ? `bg-[transparent]` : null}`} >
                 <option value={value}>{value}</option>
            </select>
         </div>

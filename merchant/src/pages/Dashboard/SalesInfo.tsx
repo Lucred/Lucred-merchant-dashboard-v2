@@ -35,7 +35,7 @@ const SalesInfo = () => {
                 <SelectInput  width={`lg:w-[30%] md:w-[50%]`} value={`Today (March 18, 2022)`}/>
             </div>
             <div className="w-[100%] overflow-scroll">
-                <table className=' w-[100%] border rounded-md my-[2%] w-[250%]'>
+                <table className=' lg:w-[100%] border rounded-md my-[2%] w-[250%]'>
                     <thead  >
                     <tr className='bg-[#1100770A] text-[0.8rem]  text-[#56555B] w-[100%] px-[5%] bg-[#fff]'>
                         <th className='font-[400] py-[1%]'>ID</th>
