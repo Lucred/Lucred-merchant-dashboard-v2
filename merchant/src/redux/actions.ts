@@ -44,13 +44,31 @@ export const getMerchant = createAsyncThunk(
   }
 );
 
-/**==============Update Profile=======  **/
+/**==============Update Logo=======  **/
 export const updateLogo = createAsyncThunk(
   "updateLogo",
+  async ({id, imageData}:any, { dispatch }) => {
+    try {
+      dispatch(fetchDataStart);
+      const response = await apiPatch(`/merchants/update/${id}/logo`, imageData);
+      toast.success(response.data.message);
+      dispatch(fetchDataSuccess(response.data));
+      window.location.reload()
+    } catch (error: any) {
+      console.log(error.response.data.error);
+      toast.error(error.response.data.Error);
+      dispatch(fetchDataFailure(error.response.data.error));
+    }
+  }
+);
+
+/**==============Update Profile=======  **/
+export const updateProfile = createAsyncThunk(
+  "updateProfile",
   async ({id, formData}:any, { dispatch }) => {
     try {
       dispatch(fetchDataStart);
-      const response = await apiPatch(`/merchants/update/${id}/logo`, formData);
+      const response = await apiPatch(`/merchants/${id}`, formData);
       toast.success(response.data.message);
       dispatch(fetchDataSuccess(response.data));
       window.location.reload()
