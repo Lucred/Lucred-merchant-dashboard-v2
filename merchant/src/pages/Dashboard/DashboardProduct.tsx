@@ -4,8 +4,21 @@ import view from '../../assets/view.png'
 import trash from '../../assets/trash.png'
 import phone from '../../assets/phone.png'
 import { Link } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { useEffect } from 'react'
+import { getProducts } from '../../redux/actions'
 
 const DashboardProduct = () => {
+    const dispatch = useDispatch() as unknown as any
+    const id = localStorage.getItem("userId") as unknown as string
+
+    const products = useSelector((state:any) => state.products)
+
+    console.log(products)
+
+    useEffect(() => {
+        dispatch(getProducts(id))
+    }, [])
   return (
     <div className={`${window.innerWidth > 768 ? `ml-[15%]`: `ml-[8%]`} mr-[5%] bg-[#1100770A] h-[100vh] `}>
         <div className='mx-[3%]'>

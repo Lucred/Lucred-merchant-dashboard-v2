@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { LoginData } from "../interface";
-import { apiDelete, apiGet, apiPatch, apiPost, apiPut } from "../utils/axios";
-import { fetchDataFailure, fetchDataPhoto, fetchDataStart, fetchDataSuccess, fetchDataUser } from "./reducer";
+import { FormDataPost, apiDelete, apiGet, apiPatch, apiPost, apiPut } from "../utils/axios";
+import { fetchDataFailure, fetchProduct, fetchDataStart, fetchDataSuccess, fetchDataUser } from "./reducer";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -36,6 +36,39 @@ export const getMerchant = createAsyncThunk(
       dispatch(fetchDataStart);
       const response = await apiGet(`/merchants/${id}`);
       dispatch(fetchDataUser(response.data));
+    } catch (error: any) {
+      console.log(error.response.data.error);
+      toast.error(error.response.data.Error);
+      dispatch(fetchDataFailure(error.response.data.error));
+    }
+  }
+);
+
+/**==============Get Products======= **/
+export const getProducts = createAsyncThunk(
+  "getProducts",
+  async (id:string, { dispatch }) => {
+    try {
+      dispatch(fetchDataStart);
+      const response = await apiGet(`/products?merchantId=${id}&page=1&size=10`);
+      dispatch(fetchProduct(response.data));
+    } catch (error: any) {
+      console.log(error.response.data.error);
+      toast.error(error.response.data.Error);
+      dispatch(fetchDataFailure(error.response.data.error));
+    }
+  }
+);
+
+/**==============Create Products======= **/
+export const createProducts = createAsyncThunk(
+  "getProducts",
+  async (formData:any, { dispatch }) => {
+    try {
+      dispatch(fetchDataStart);
+      const response = await FormDataPost(`/products`, formData);
+      dispatch(fetchProduct(response.data));
+      toast.success(response.data.message);
     } catch (error: any) {
       console.log(error.response.data.error);
       toast.error(error.response.data.Error);
@@ -101,240 +134,6 @@ export const registerUser = createAsyncThunk(
   }
 );
 
-export const verifyUser = createAsyncThunk(
-  "verifyUser",
-  async (token: string, { dispatch }) => {
-    try {
-      dispatch(fetchDataStart);
-      const response = await apiPatch(`/user/verify/?token=${token}`, {});
-      toast.success(response.data.message);
-      dispatch(fetchDataSuccess(response.data));
-      setTimeout(() => {
-        window.location.href = "/verified";
-      }, 2000);
-    } catch (error: any) {
-      console.log(error.response.data.error);
-      toast.error(error.response.data.Error);
-      dispatch(fetchDataFailure(error.response.data.error));
-      window.location.href = "/expired";
-    }
-  }
-);
-
-export const resendverification = createAsyncThunk(
-  "resendverification",
-  async (token: string, { dispatch }) => {
-    try {
-      dispatch(fetchDataStart);
-      const response = await apiGet(`/user/resendverification/${token}`);
-      toast.success(response.data.message);
-      dispatch(fetchDataSuccess(response.data));
-      setTimeout(() => {
-        window.location.href = "/confirm";
-      }, 2000);
-    } catch (error: any) {
-      console.log(error.response.data.error);
-      toast.error(error.response.data.Error);
-      dispatch(fetchDataFailure(error.response.data.error));
-    }
-  }
-);
-
-
-
-
-/**==============Get Events ======= **/
-export const getEvents = createAsyncThunk(
-  "getEvents",
-  async (_, { dispatch }) => {
-    try {
-      dispatch(fetchDataStart);
-      const response = await apiGet("/event/getEvents");
-      dispatch(fetchDataSuccess(response.data));
-    } catch (error: any) {
-      console.log(error.response.data.error);
-      toast.error(error.response.data.Error);
-      dispatch(fetchDataFailure(error.response.data.error));
-    }
-  }
-);
-
-/**==============Register For Event======= **/
-
-export const registerEvent = createAsyncThunk(
-  "registerEvent",
-  async ({formData , id}:any, { dispatch }) => {
-    try {
-      dispatch(fetchDataStart);
-      const response = await apiPatch(`/user/register-event?id=${id}`, formData);
-      toast.success(response.data.message);
-      dispatch(fetchDataSuccess(response.data));
-    } catch (error: any) {
-      console.log(error.response.data.error);
-      toast.error(error.response.data.Error);
-      dispatch(fetchDataFailure(error.response.data.error));
-    }
-  }
-);
-
-  /**==============Upload Photos=======  **/
-export const uploadPhotos = createAsyncThunk(
-  "uploadPhotos",
-  async (formData:any, { dispatch }) => {
-    try {
-      dispatch(fetchDataStart);
-      console.log(formData)
-      const response = await apiPatch(`/photographer/upload-photos`, formData);
-      toast.success(response.data.message);
-      dispatch(fetchDataSuccess(response.data));
-    } catch (error: any) {
-      console.log(error.response.data.error);
-      toast.error(error.response.data.Error);
-      dispatch(fetchDataFailure(error.response.data.error));
-    }
-  }
-);
-
-/**==============Save Photos======= **/
-export const saveImages = createAsyncThunk(
-  "saveImages",
-  async (formData:any, { dispatch }) => {
-    try {
-      dispatch(fetchDataStart);
-      console.log(formData)
-      const response = await apiPut(`/user/save-image`, formData);
-      toast.success(response.data.message);
-      dispatch(fetchDataSuccess(response.data));
-    } catch (error: any) {
-      console.log(error.response.data.error);
-      toast.error(error.response.data.Error);
-      dispatch(fetchDataFailure(error.response.data.error));
-    }
-  }
-);
-
-/**==============Delete Photos======= **/
-  export const deletePhotos = createAsyncThunk(
-    "deletePhotos",
-    async ({eventId, url}:any, { dispatch }) => {
-      try {
-        dispatch(fetchDataStart);
-        const response = await apiDelete(`/photographer/delete-photos?eventId=${eventId}&url=${url}`);
-        toast.success(response.data.message);
-        dispatch(fetchDataSuccess(response.data));
-      } catch (error: any) {
-        console.log(error.response.data.error);
-        toast.error(error.response.data.Error);
-        dispatch(fetchDataFailure(error.response.data.error));
-      }
-    }
-  );
-
-
-  /**==============Get Photographers======= **/
-  export const getPhotographers = createAsyncThunk(
-    "getPhotographers",
-    async (_, { dispatch }) => {
-      try {
-        dispatch(fetchDataStart);
-        const response = await apiGet(`/photographer/get-photographer`);
-        toast.success(response.data.message);
-        dispatch(fetchDataPhoto(response.data));
-      } catch (error: any) {
-        console.log(error.response.data.error);
-        toast.error(error.response.data.Error);
-        dispatch(fetchDataFailure(error.response.data.error));
-      }
-    }
-  );
-
-    /**==============Get Photographers======= **/
-    export const getSinglePhotographer = createAsyncThunk(
-      "getSinglePhotographer",
-      async (_, { dispatch }) => {
-        try {
-          dispatch(fetchDataStart);
-          const response = await apiGet(`/photographer/get-singlephotographer`);
-          toast.success(response.data.message);
-          dispatch(fetchDataPhoto(response.data));
-        } catch (error: any) {
-          console.log(error.response.data.error);
-          toast.error(error.response.data.Error);
-          dispatch(fetchDataFailure(error.response.data.error));
-        }
-      }
-    );
-
-    /**==============Get All Users ========= **/
-    export const getUsers= createAsyncThunk(
-      "getUsers",
-      async (_, { dispatch }) => {
-        try {
-          dispatch(fetchDataStart);
-          const response = await apiGet(`/user/get-users`);
-          toast.success(response.data.message);
-          dispatch(fetchDataSuccess(response.data));
-        } catch (error: any) {
-          console.log(error.response.data.error);
-          toast.error(error.response.data.Error);
-          dispatch(fetchDataFailure(error.response.data.error));
-        }
-      }
-    );
-
-  /**==============Get Photographers======= **/
-  export const createPhotographer = createAsyncThunk(
-    "createPhotographer",
-    async (formData :any, { dispatch }) => {
-      try {
-        dispatch(fetchDataStart);
-        const response = await apiPost(`/admin/create-photographer`, formData);
-        toast.success(response.data.message);
-        dispatch(fetchDataSuccess(response.data));
-      } catch (error: any) {
-        console.log(error.response.data.error);
-        toast.error(error.response.data.Error);
-        dispatch(fetchDataFailure(error.response.data.error));
-      }
-    }
-  );
-
-    /**==============Create Event======= **/
-    export const createEvent = createAsyncThunk(
-      "createEvent",
-      async (formData :any, { dispatch }) => {
-        try {
-          dispatch(fetchDataStart);
-          const response = await apiPost(`/admin/create-event`, formData);
-          toast.success(response.data.message);
-          dispatch(fetchDataSuccess(response.data));
-        } catch (error: any) {
-          console.log(error.response.data.error);
-          toast.error(error.response.data.Error);
-          dispatch(fetchDataFailure(error.response.data.error));
-        }
-      }
-    );
-
-
-
-
-  /**==============Update Photographers Profile=======  **/
-  export const updatePhotoProfile = createAsyncThunk(
-    "updateProfile",
-    async (formData:any, { dispatch }) => {
-      try {
-        dispatch(fetchDataStart);
-        const response = await apiPatch(`/photographer/update`, formData);
-        toast.success(response.data.message);
-        dispatch(fetchDataSuccess(response.data));
-      } catch (error: any) {
-        console.log(error.response.data.error);
-        toast.error(error.response.data.Error);
-        dispatch(fetchDataFailure(error.response.data.error));
-      }
-    }
-  );
 
 
   /**==============Logout ======= **/

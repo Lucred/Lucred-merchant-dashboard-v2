@@ -3,7 +3,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 export interface State {
   data: any[];
   merchant: any[];
-  photographer: any[];
+  product: any[];
   loading: boolean;
   error: string | null;
 }
@@ -11,7 +11,7 @@ export interface State {
 const initialState: State = {
   data: [],
   merchant: [],
-  photographer: [],
+  product: [],
   loading: false,
   error: null,
 };
@@ -32,9 +32,9 @@ const dataSlice = createSlice({
       state.loading = false;
       state.merchant = action.payload;
     },
-    fetchDataPhoto : (state, action: PayloadAction<any[]>) => {
+    fetchProduct : (state, action: PayloadAction<any[]>) => {
       state.loading = false;
-      state.photographer = action.payload;
+      state.product = action.payload;
     },
     fetchDataFailure: (state, action: PayloadAction<string>) => {
       state.loading = false;
@@ -43,6 +43,6 @@ const dataSlice = createSlice({
   },
 });
 
-export const { fetchDataStart, fetchDataSuccess, fetchDataUser, fetchDataPhoto, fetchDataFailure } = dataSlice.actions;
+export const { fetchDataStart, fetchDataSuccess, fetchDataUser, fetchProduct, fetchDataFailure } = dataSlice.actions;
 
 export default dataSlice.reducer;

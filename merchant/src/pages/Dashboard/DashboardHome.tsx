@@ -88,7 +88,7 @@ const DashboardHome = () => {
           </div>
         </div>
       </div>
-     {showHelp? <Help />: null } 
+     {/* {true? <Help />: null }  */}
     </div>
   );
 };
