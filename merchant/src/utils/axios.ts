@@ -6,7 +6,7 @@ const baseUrl = "https://lucred-backend.onrender.com/api/v1";
 export const apiGet = (path:string) => {
   const config = {
     headers: {
-      Authorization: `Bearer ${localStorage.getItem("signature")}`
+      "x-merchant-token": `Bearer ${localStorage.getItem("signature")}`
     },
   };
 
@@ -24,6 +24,7 @@ export const apiPost = async (path:string, data:any) => {
   return await axios.post(`${baseUrl}${path}`, data, config);
 };
 
+
 export const FormDataPost = async (path:string, data:any) => {
   const config = {
     headers: {
@@ -39,6 +40,17 @@ export const apiPut = (path:string, data:object) => {
     headers: {
       "x-merchant-token": `${localStorage.getItem("signature")}`,
       "Content-Type": [ "application/json"]
+    },
+  };
+
+  return axios.put(`${baseUrl}${path}`, data, config);
+};
+
+export const formDataPut = (path:string, data:object) => {
+  const config = {
+    headers: {
+      "x-merchant-token": `${localStorage.getItem("signature")}`,
+      "Content-Type": "multipart/form-data"
     },
   };
 

@@ -10,6 +10,7 @@ import Settings from './Settings'
 
 const Dashboard = () => {
   
+  
   return (
     <div >
         <Sidebar />
@@ -21,6 +22,7 @@ const Dashboard = () => {
             <Route path="/" element={<DashboardHome />} />
             <Route path="/product" element={<DashboardProduct />} />
             <Route path="/add-product" element={<DashboardAddProduct />} />
+            <Route path="/update-product/:productId" element={<DashboardAddProduct />} />
             <Route path="/sales-info" element={<SalesInfo />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/customer-report" element={<UserReport />} />

@@ -13,6 +13,7 @@ const Profile = () => {
     const [formData, setFormData] = useState<any>({})
 
     const id = localStorage.getItem("userId")
+    const logo = localStorage.getItem("logo")
     const dispatch = useDispatch() as unknown as any
 
     const inputRef = useRef<any>()
@@ -51,8 +52,8 @@ const Profile = () => {
             <div className='bg-[#533AE9] mb-[5%] px-[1%] rounded-md flex items-end'>
                 <div className='flex items-end h-[20vh]'>
                     <div className='bg-[#fff] w-[150px] h-[150px] rounded-[50%] flex items-center justify-center mb-[-15%]' >
-                        {!imgFile ? <img src={profille} alt="" className='h-[10vh] rounded-full' onClick={handleRef}/>:
-                        <img src={imgFile} alt="" className='h-[10vh] rounded-full' onClick={handleRef}/>}
+                        {!imgFile ? <img src={logo || profille} alt="" className='h-[18vh] rounded-full' onClick={handleRef}/>:
+                        <img src={imgFile} alt="" className='h-[18vh] rounded-full' onClick={handleRef}/>}
                         <input name="logo" type="file" ref={inputRef} onChange={handleLogoChange} className="hidden"/>
                     </div>
                         {/* <p onClick={handleLogo}>Enter</p> */}
@@ -61,7 +62,7 @@ const Profile = () => {
                 </div>
 
             </div>
-            <button onClick={handleLogo}>update logo</button>
+            <button onClick={handleLogo} className='bg-[#533AE9] text-[#fff]'>update logo</button>
             <div className=' py-[2%] px-[1%] rounded-md lg:grid grid-cols-2 grid-rows-4 gap-x-8 mt-[15%] lg:mt-[0%]'>
                 <TextInput label='Email Address' placeholder='DahunsiTemmyforgood@gmail.com' type='email' onChange={handleChange}/>
                 <TextInput label='Account Name' placeholder='Dahunsi Temitope' onChange={handleChange} />

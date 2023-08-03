@@ -6,14 +6,13 @@ import phone from '../../assets/phone.png'
 import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect } from 'react'
-import { getProducts } from '../../redux/actions'
+import {  deleteProduct, getProducts } from '../../redux/actions'
 
 const DashboardProduct = () => {
     const dispatch = useDispatch() as unknown as any
-    const id = localStorage.getItem("userId") as unknown as string
+    const id = localStorage.getItem("merchantId") as unknown as string
 
-    const products = useSelector((state:any) => state.products)
-
+    const products = useSelector((state:any) => state.product)
     console.log(products)
 
     useEffect(() => {
@@ -51,90 +50,19 @@ const DashboardProduct = () => {
                         </tr>
                         </thead> 
                         <tbody>
-                        <tr className='bg-[#1100770A] text-[0.8rem] text-[#56555B] text-center w-[100%]  '>
+                        {products?.map((elem:any, id:number) => (
+                        <tr key={id} className='bg-[#1100770A] text-[0.8rem] text-[#56555B] text-center w-[100%]  '>
                             <td className='font-[400] py-[1%]'><input type="checkbox" /></td>
-                            <td className='font-[400] flex justify-center items-center'><img src={phone} alt="" /></td>
-                            <td className='font-[400]'>iPhone Screenguard</td>
-                            <td className='font-[400]'>Accessories</td>
-                            <td className='font-[400]'>Phones & Gadgets</td>
-                            <td className='font-[400]'>Samsung</td>
+                            <td className='font-[400] flex justify-center items-center'><img src={elem.coverImage} alt="" className='h-[5vh]'/></td>
+                            <td className='font-[400]'>{elem.title}</td>
+                            <td className='font-[400]'>{elem.subCategory}</td>
+                            <td className='font-[400]'>{elem.category}</td>
+                            <td className='font-[400]'>{elem.description}</td>
                             <td className='font-[400]'>100</td>
-                            <td className='font-[400]'>₦1,000</td>
-                            <td className='font-[400]  '><div className='flex items-center justify-center'><img src={view} alt="" /> <img src={edit} alt="" /> <img src={trash} alt="" /> </div> </td>
+                            <td className='font-[400]'>₦{elem.price}</td>
+                            <td className='font-[400]  '><div className='flex items-center justify-center'><img src={view} alt="" /><Link to={`/dashboard/update-product/${elem._id}`}><img src={edit} alt="" /> </Link><img src={trash} alt="" onClick={async()=> await dispatch(deleteProduct(elem._id)) } /> </div> </td>
                             
-                        </tr>
-                        <tr className='bg-[#1100770A] text-[0.8rem] text-[#56555B] text-center w-[100%] '>
-                            <td className='font-[400] py-[1%]'><input type="checkbox" /></td>
-                            <td className='font-[400] flex justify-center items-center'><img src={phone} alt="" /></td>
-                            <td className='font-[400]'>iPhone Screenguard</td>
-                            <td className='font-[400]'>Accessories</td>
-                            <td className='font-[400]'>Phones & Gadgets</td>
-                            <td className='font-[400]'>Samsung</td>
-                            <td className='font-[400]'>100</td>
-                            <td className='font-[400]'>₦1,000</td>
-                            <td className='font-[400]  '><div className='flex items-center justify-center'><img src={view} alt="" /> <img src={edit} alt="" /> <img src={trash} alt="" /> </div> </td>
-                            
-                        </tr>
-                        <tr className='bg-[#1100770A] text-[0.8rem] text-[#56555B] text-center w-[100%] '>
-                            <td className='font-[400] py-[1%]'><input type="checkbox" /></td>
-                            <td className='font-[400] flex justify-center items-center'><img src={phone} alt="" /></td>
-                            <td className='font-[400]'>iPhone Screenguard</td>
-                            <td className='font-[400]'>Accessories</td>
-                            <td className='font-[400]'>Phones & Gadgets</td>
-                            <td className='font-[400]'>Samsung</td>
-                            <td className='font-[400]'>100</td>
-                            <td className='font-[400]'>₦1,000</td>
-                            <td className='font-[400]  '><div className='flex items-center justify-center'><img src={view} alt="" /> <img src={edit} alt="" /> <img src={trash} alt="" /> </div> </td>
-                            
-                        </tr>
-                        <tr className='bg-[#1100770A] text-[0.8rem] text-[#56555B] text-center w-[100%] '>
-                            <td className='font-[400] py-[1%]'><input type="checkbox" /></td>
-                            <td className='font-[400] flex justify-center items-center'><img src={phone} alt="" /></td>
-                            <td className='font-[400]'>iPhone Screenguard</td>
-                            <td className='font-[400]'>Accessories</td>
-                            <td className='font-[400]'>Phones & Gadgets</td>
-                            <td className='font-[400]'>Samsung</td>
-                            <td className='font-[400]'>100</td>
-                            <td className='font-[400]'>₦1,000</td>
-                            <td className='font-[400]  '><div className='flex items-center justify-center'><img src={view} alt="" /> <img src={edit} alt="" /> <img src={trash} alt="" /> </div> </td>
-                            
-                        </tr>
-                        <tr className='bg-[#1100770A] text-[0.8rem] text-[#56555B] text-center w-[100%] '>
-                            <td className='font-[400] py-[1%]'><input type="checkbox" /></td>
-                            <td className='font-[400] flex justify-center items-center'><img src={phone} alt="" /></td>
-                            <td className='font-[400]'>iPhone Screenguard</td>
-                            <td className='font-[400]'>Accessories</td>
-                            <td className='font-[400]'>Phones & Gadgets</td>
-                            <td className='font-[400]'>Samsung</td>
-                            <td className='font-[400]'>100</td>
-                            <td className='font-[400]'>₦1,000</td>
-                            <td className='font-[400]  '><div className='flex items-center justify-center'><img src={view} alt="" /> <img src={edit} alt="" /> <img src={trash} alt="" /> </div> </td>
-                            
-                        </tr>
-                        <tr className='bg-[#1100770A] text-[0.8rem] text-[#56555B] text-center w-[100%] '>
-                            <td className='font-[400] py-[1%]'><input type="checkbox" /></td>
-                            <td className='font-[400] flex justify-center items-center'><img src={phone} alt="" /></td>
-                            <td className='font-[400]'>iPhone Screenguard</td>
-                            <td className='font-[400]'>Accessories</td>
-                            <td className='font-[400]'>Phones & Gadgets</td>
-                            <td className='font-[400]'>Samsung</td>
-                            <td className='font-[400]'>100</td>
-                            <td className='font-[400]'>₦1,000</td>
-                            <td className='font-[400]  '><div className='flex items-center justify-center'><img src={view} alt="" /> <img src={edit} alt="" /> <img src={trash} alt="" /> </div> </td>
-                            
-                        </tr>
-                        <tr className='bg-[#1100770A] text-[0.8rem] text-[#56555B] text-center w-[100%] '>
-                            <td className='font-[400] py-[1%]'><input type="checkbox" /></td>
-                            <td className='font-[400] flex justify-center items-center'><img src={phone} alt="" /></td>
-                            <td className='font-[400]'>iPhone Screenguard</td>
-                            <td className='font-[400]'>Accessories</td>
-                            <td className='font-[400]'>Phones & Gadgets</td>
-                            <td className='font-[400]'>Samsung</td>
-                            <td className='font-[400]'>100</td>
-                            <td className='font-[400]'>₦1,000</td>
-                            <td className='font-[400]  '><div className='flex items-center justify-center'><img src={view} alt="" /> <img src={edit} alt="" /> <img src={trash} alt="" /> </div> </td>
-                            
-                        </tr>
+                        </tr>))}
 
                         </tbody>
                     </table>

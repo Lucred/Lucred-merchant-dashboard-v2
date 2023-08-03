@@ -97,6 +97,7 @@ export default DashboardHome;
 
 export const DashNav = () => {
   const location = useLocation();
+  const logo = localStorage.getItem("logo")
   return (
     <div className="flex justify-between items-center bg-[#533AE90D] px-[3%] h-[8vh]">
       <div className="w-[50%] bg-[#FFFFFF] flex items-center justify-center h-[5vh] ">
@@ -117,7 +118,7 @@ export const DashNav = () => {
           </Link>
         ) : null}
         <img src={bellRing} alt="" className="h-[2vh] mr-[5%]" />
-        <img src={avatar} alt="" className="h-[2vh] mr-[5%]" />
+        <img src={logo || avatar} alt="" className="h-[2vh] mr-[5%]" />
       </div>
     </div>
   );

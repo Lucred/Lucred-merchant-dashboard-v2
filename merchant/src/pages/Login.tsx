@@ -28,7 +28,7 @@ const Login = () => {
         dispatch(loginUser(formData))
     }
    return (
-    <div className='flex lg:flex-row flex-col justify-between px-[5%] py-[3%] h-[100vh] '>
+    <div className='flex lg:flex-row flex-col justify-between px-[5%] py-[3%] h-[100vh]'>
         <div className='xl:w-[50%] lg:w-[60%]  py-[5%] pl-[5%] lg:block flex flex-col items-center justify-center'>
             <img src={lucred} alt="Lucred" />
             <div className='text-center lg:text-left'>
