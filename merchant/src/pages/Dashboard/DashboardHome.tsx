@@ -18,7 +18,6 @@ const DashboardHome = () => {
   const dispatch = useDispatch() as unknown as any
   const id  = localStorage.getItem('userId') as unknown as string
 
-  console.log(merchant)
 
   useEffect(() => {
     dispatch(getMerchant(id))

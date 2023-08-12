@@ -28,7 +28,7 @@ export const MaxSidebar = () => {
             <img src={lucred} alt="Lucred" className='bg-[#fff] rounded-md mx-[auto] my-[12%] py-[5%] px-[5%] h-[9vh]' />
            <ul className='h-[60vh] flex flex-col justify-evenly ml-[5%]'>
                 <li><Link to={'/dashboard'} className='text-[#fff] flex pl-[5%] items-center '><img src={home} alt="" className='h-[2vh] mr-[5%]'/>Dashboard</Link></li>
-                <li><Link to={'/dashboard/add-product'} className='text-[#fff] flex pl-[5%] items-center '><img src={addProduct} alt="" className='h-[2vh] mr-[5%]'/>Add Product</Link></li>
+                <li><Link to={'/dashboard/product'} className='text-[#fff] flex pl-[5%] items-center '><img src={addProduct} alt="" className='h-[2vh] mr-[5%]'/>Product</Link></li>
                 <li><Link to={'/dashboard/sales-info'} className='text-[#fff] flex pl-[5%] items-center '><img src={sales} alt="" className='h-[2vh] mr-[5%]'/>Sales Info</Link></li>
                 <li><Link to={'/dashboard/profile'} className='text-[#fff] flex pl-[5%] items-center '><img src={profile} alt="" className='h-[2vh] mr-[5%]'/>Profile</Link></li>
                 <li><Link to={'/dashboard/user-guide'} className='text-[#fff] flex pl-[5%] items-center '><img src={userGuide} alt="" className='h-[auto] mr-[5%]'/>User Guide</Link></li>
@@ -63,7 +63,7 @@ export const MaxSidebar = () => {
                 <img src={lucredMini} alt="Lucred" className=' mx-auto ' />
                <ul className='h-[60vh] flex flex-col justify-evenly items-center ml-[5%]'>
                     <li><Link to={'/dashboard'} className='text-[#fff] flex pl-[5%] items-center ' onClick={click}><img src={home} alt="" className='h-[2vh] mr-[5%]'/></Link></li>
-                    <li><Link to={'/dashboard/add-product'} className='text-[#fff] flex pl-[5%] items-center ' onClick={click}><img src={addProduct} alt="" className='h-[2vh] mr-[5%]'/></Link></li>
+                    <li><Link to={'/dashboard/product'} className='text-[#fff] flex pl-[5%] items-center ' onClick={click}><img src={addProduct} alt="" className='h-[2vh] mr-[5%]'/></Link></li>
                     <li><Link to={'/dashboard/sales-info'} className='text-[#fff] flex pl-[5%] items-center ' onClick={click}><img src={sales} alt="" className='h-[2vh] mr-[5%]'/></Link></li>
                     <li><Link to={'/dashboard/profile'} className='text-[#fff] flex pl-[5%] items-center ' onClick={click}><img src={profile} alt="" className='h-[2vh] mr-[5%]'/></Link></li>
                     <li><Link to={'/dashboard/user-guide'} className='text-[#fff] flex pl-[5%] items-center ' onClick={click}><img src={userGuide} alt="" className='h-[auto] mr-[5%]'/></Link></li>
@@ -83,7 +83,7 @@ export const MaxSidebar = () => {
                 <img src={lucred} alt="Lucred" className='bg-[#fff] rounded-md mx-[auto] my-[12%] py-[5%] px-[5%] h-[9vh]' />
                 <ul className='h-[60vh] flex flex-col justify-evenly ml-[5%]'>
                 <li><Link to={'/dashboard'} className='text-[#fff] flex pl-[5%] items-center ' onClick={click}><img src={home} alt="" className='h-[2vh] mr-[5%]'/>Dashboard</Link></li>
-                <li><Link to={'/dashboard/add-product'} className='text-[#fff] flex pl-[5%] items-center ' onClick={click}><img src={addProduct} alt="" className='h-[2vh] mr-[5%]'/>Add Product</Link></li>
+                <li><Link to={'/dashboard/product'} className='text-[#fff] flex pl-[5%] items-center ' onClick={click}><img src={addProduct} alt="" className='h-[2vh] mr-[5%]'/>Product</Link></li>
                 <li><Link to={'/dashboard/sales-info'} className='text-[#fff] flex pl-[5%] items-center ' onClick={click}><img src={sales} alt="" className='h-[2vh] mr-[5%]'/>Sales Info</Link></li>
                 <li><Link to={'/dashboard/profile'} className='text-[#fff] flex pl-[5%] items-center ' onClick={click}><img src={profile} alt="" className='h-[2vh] mr-[5%]'/>Profile</Link></li>
                 <li><Link to={'/dashboard/user-guide'} className='text-[#fff] flex pl-[5%] items-center ' onClick={click}><img src={userGuide} alt="" className='h-[auto] mr-[5%]'/>User Guide</Link></li>

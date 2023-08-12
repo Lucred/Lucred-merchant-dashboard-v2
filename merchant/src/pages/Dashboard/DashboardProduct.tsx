@@ -13,7 +13,7 @@ const DashboardProduct = () => {
     const id = localStorage.getItem("merchantId") as unknown as string
 
     const products = useSelector((state:any) => state.product)
-    console.log(products)
+    
 
     useEffect(() => {
         dispatch(getProducts(id))
@@ -35,9 +35,9 @@ const DashboardProduct = () => {
                     <Link to="/dashboard/add-product" className='bg-[#533AE9] lg:w-[20%] w-[40%] h-[5vh] text-[#fff] lg:mr-[5%] rounded-md flex justify-center items-center'>Add Product</Link>
                 </div>
                 <div className='w-[100%] overflow-scroll'>
-                    <table className='w-[250%] lg:w-[100%] border rounded-md my-[2%]'>
+                    <table className='w-[250%] lg:w-[100%]  rounded-md my-[2%]'>
                         <thead  >
-                        <tr className='bg-[#1100770A] text-[0.8rem]  text-[#56555B] w-[100%] px-[5%]'>
+                        <tr className='bg-[#1100770A] text-[0.8rem]  text-[#171515] font-[700] w-[100%] px-[5%] '>
                             <th className='font-[400] py-[1%]'><input type="checkbox" /></th>
                             <th className='font-[400]'>Product</th>
                             <th className='font-[400]'>Title</th>
@@ -51,16 +51,16 @@ const DashboardProduct = () => {
                         </thead> 
                         <tbody>
                         {products?.map((elem:any, id:number) => (
-                        <tr key={id} className='bg-[#1100770A] text-[0.8rem] text-[#56555B] text-center w-[100%]  '>
+                        <tr key={id} className='bg-[#FFFFFF] text-[0.8rem] text-[#171515] text-center w-[100%] h-[10vh] '>
                             <td className='font-[400] py-[1%]'><input type="checkbox" /></td>
-                            <td className='font-[400] flex justify-center items-center'><img src={elem.coverImage} alt="" className='h-[5vh]'/></td>
+                            <td className='font-[400] flex justify-center items-center h-[10vh]'><img src={elem.coverImage} alt="" className='h-[50px]'/></td>
                             <td className='font-[400]'>{elem.title}</td>
                             <td className='font-[400]'>{elem.subCategory}</td>
                             <td className='font-[400]'>{elem.category}</td>
                             <td className='font-[400]'>{elem.description}</td>
                             <td className='font-[400]'>100</td>
                             <td className='font-[400]'>₦{elem.price}</td>
-                            <td className='font-[400]  '><div className='flex items-center justify-center'><img src={view} alt="" /><Link to={`/dashboard/update-product/${elem._id}`}><img src={edit} alt="" /> </Link><img src={trash} alt="" onClick={async()=> await dispatch(deleteProduct(elem._id)) } /> </div> </td>
+                            <td className='font-[400]  '><div className='flex items-center justify-center'><Link to={`/dashboard/product/${elem._id}`}><img src={view} alt="" /></Link><Link to={`/dashboard/update-product/${elem._id}`}><img src={edit} alt="" /> </Link><img src={trash} alt="" onClick={async()=> await dispatch(deleteProduct(elem._id)) } /> </div> </td>
                             
                         </tr>))}
 

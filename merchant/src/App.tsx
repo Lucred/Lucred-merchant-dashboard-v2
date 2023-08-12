@@ -7,6 +7,7 @@ import { ToastContainer } from 'react-toastify'
 import { configureStore } from '@reduxjs/toolkit'
 import thunk from 'redux-thunk';
 import reducer from './redux/reducer';
+import { ProtectRoute } from './pages/ProtectedRoute'
 
 const store = configureStore({
   reducer: reducer,
@@ -22,7 +23,7 @@ function App() {
       <Router>
         <Routes>
           <Route path="/login" element={<Login />} />
-          <Route path="/dashboard/*" element={<Dashboard />} />
+          <Route path="/dashboard/*" element={<ProtectRoute><Dashboard /></ProtectRoute>} />
 
 
         </Routes>

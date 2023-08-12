@@ -37,7 +37,8 @@ export const getMerchant = createAsyncThunk(
     try {
       dispatch(fetchDataStart);
       const response = await apiGet(`/merchants/${id}`);
-      dispatch(fetchDataUser(response.data));
+      console.log(response)
+      dispatch(fetchDataUser(response.data.data));
     } catch (error: any) {
       console.log(error.response.data.error);
       toast.error(error.response.data.Error);
@@ -140,7 +141,7 @@ export const updateLogo = createAsyncThunk(
     try {
       dispatch(fetchDataStart);
       const response = await formDataPut(`/merchants/update/${id}/logo`, imageData);
-      toast.success(response.data.message);
+      toast.success("Profile Logo Updated");
       dispatch(fetchDataSuccess(response.data));
       window.location.reload()
     } catch (error: any) {
@@ -162,8 +163,7 @@ export const updateProfile = createAsyncThunk(
       dispatch(fetchDataSuccess(response.data));
       window.location.reload()
     } catch (error: any) {
-      console.log(error.response.data.error);
-      toast.error(error.response.data.Error);
+      toast.error(error.response.data.message);
       dispatch(fetchDataFailure(error.response.data.error));
     }
   }

@@ -6,7 +6,7 @@ const baseUrl = "https://lucred-backend.onrender.com/api/v1";
 export const apiGet = (path:string) => {
   const config = {
     headers: {
-      "x-merchant-token": `Bearer ${localStorage.getItem("signature")}`
+      "x-merchant-token": `${localStorage.getItem("signature")}`
     },
   };
 

@@ -65,7 +65,7 @@ const Login = () => {
         </div>
         <div className='flex flex-col items-center justify-center bg-[#1100770A] xl:w-[50%] lg:w-[45%] rounded-md py-[5%] text-center'>
             <h2 className='text-[1.5rem] lg:text-[2.2rem] text-[#110077] font-[600]'>Increase Sales with Lucred</h2>
-            <p className='w-[70%] mx-auto text-[0.9rem]'>Allow your customers buy now and pay overtime at zero-cost to you, increase revenu by 50%</p>
+            <p className='w-[70%] mx-auto text-[0.9rem]'>Allow your customers buy now and pay overtime at zero-cost to you, increase revenue by 50%</p>
             <img src={loginImg} alt="loginImg" className='lg:h-[35vh] xl:h-[65vh] my-[3%]' />
         </div>
         

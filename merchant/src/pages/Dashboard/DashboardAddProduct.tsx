@@ -309,7 +309,8 @@ export const TextInput = ({
   value,
   onChange,
   error,
-  width
+  width, 
+  readonly
 }: any) => {
   return (
     <div className="flex flex-col py-[2%]">
@@ -324,6 +325,7 @@ export const TextInput = ({
         value={value}
         onChange={onChange}
         className={`border border-[#11007766] rounded-md h-[6vh] lg:h-[4vh] px-[2%] outline-none ${width}`}
+        readOnly={readonly}
       />
       {error && <p className="text-[0.7rem] text-[#8C858D]">{error}</p>}
     </div>
@@ -340,6 +342,7 @@ export const SelectInput = ({
   onChange,
   width,
   error,
+  readonly
 }: any) => {
   const location = useLocation();
   return (
@@ -355,6 +358,7 @@ export const SelectInput = ({
             ? `bg-[transparent]`
             : null
         }`}
+        disabled={readonly}
       > 
       <option>select</option>
         {name === "category"
@@ -424,15 +428,16 @@ export const TextAreaInput = ({
 };
 
 const Chip = ({ text, onDelete }: any) => {
+  const location = useLocation()
   return (
-    <div className="chip bg-[#ccc] w-[auto] flex justify-between items-center py-[2%] px-[3%] rounded-md mx-[2%] my-[2%]">
+    <div className="chip bg-[#fff] border border-[#ccc] w-[auto] flex justify-between items-center py-[2%] px-[3%] rounded-md mx-[2%] my-[2%]">
       <span className="chip-text">{text}</span>
-      <button
-        className="h-[2px] w-[2px] flex justify-center items-center ml-[5%]"
+      {location.pathname === '/dashboard/add-product' ? <button
+        className="h-[2px] w-[2px] flex justify-center items-center ml-[5%] bg-[#fff]"
         onClick={onDelete}
       >
         &times;
-      </button>
+      </button> : ''}
     </div>
   );
 };

@@ -62,7 +62,7 @@ const Settings = () => {
                 <div className='flex flex-col items-center py-[4%]'>
                     <p className='text-[0.8rem]'>Company Logo</p>
                     <div className='bg-[#fff] w-[100px] h-[100px] border border-[#533AE9] border-[5px] rounded-[50%] flex items-center justify-center '>
-                        <img src={logo || profille} alt="" className='h-[10vh] rounded-full'/>
+                        <img src={logo || profille} alt="" className='w-[90px] h-[90px] object-cover object-top rounded-[50%]' />
                     </div>
                 </div>
             </div>

@@ -7,6 +7,7 @@ import SalesInfo from './SalesInfo'
 import Profile from './Profile'
 import UserReport from './UserReport'
 import Settings from './Settings'
+import SingleProduct from './SingleProduct'
 
 const Dashboard = () => {
   
@@ -21,6 +22,7 @@ const Dashboard = () => {
         <Routes>
             <Route path="/" element={<DashboardHome />} />
             <Route path="/product" element={<DashboardProduct />} />
+            <Route path="/product/:productId" element={<SingleProduct />} />
             <Route path="/add-product" element={<DashboardAddProduct />} />
             <Route path="/update-product/:productId" element={<DashboardAddProduct />} />
             <Route path="/sales-info" element={<SalesInfo />} />
