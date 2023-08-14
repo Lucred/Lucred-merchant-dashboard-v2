@@ -133,6 +133,12 @@ const SingleProduct = () => {
                 value={`Today (March 18, 2022)`}
               /> */}
             </div>
+            <Link to={`/dashboard/update-product/${productId}`}
+                  type="submit"
+                  className="bg-[#533AE9] w-[40%] h-[5vh] text-[#fff] mr-[5%] rounded-md flex justify-center items-center"
+                >
+                  Update Product
+                </Link >
 
           </div>
         </form>

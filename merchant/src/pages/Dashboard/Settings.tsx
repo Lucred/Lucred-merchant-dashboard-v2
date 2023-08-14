@@ -75,7 +75,7 @@ const Settings = () => {
                         <TextInput label='Second Name' name="lastname" value={formData.lastName} type="text" placeholder="Temitope" onChange={handleChange} />
 
                     </div>
-                    <TextInput label='Company Name' type="number" placeholder="08030601026" />
+                    <TextInput label='Company Name' type="text" placeholder="COMPANY XYZ" />
                     <TextInput label='Address' type="text" placeholder="House 38/40 Sunshine Estate" />
 
                 </div >

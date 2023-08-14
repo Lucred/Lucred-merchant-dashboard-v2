@@ -18,6 +18,8 @@ const DashboardHome = () => {
   const dispatch = useDispatch() as unknown as any
   const id  = localStorage.getItem('userId') as unknown as string
 
+  console.log(merchant)
+
 
   useEffect(() => {
     dispatch(getMerchant(id))
@@ -64,10 +66,10 @@ const DashboardHome = () => {
         
         <div className=" w-[100%] overflow-x-scroll">
           <div className="flex justify-between w-[250%] lg:w-[100%] my-[5%] lg:my-[0%] ">
-            <AnalyticCard width={`w-[23%]`} />
-            <AnalyticCard width={`w-[23%]`} />
-            <AnalyticCard width={`w-[23%]`} />
-            <AnalyticCard width={`w-[23%]`} />
+            <AnalyticCard width={`w-[23%]`} total={`Total Revenue`} amount={`₦` + merchant?.currentRevenue} />
+            <AnalyticCard width={`w-[23%]`} total={`Total Customers`} amount={merchant?.customers?.length || 0}/>
+            <AnalyticCard width={`w-[23%]`} total={`Total Transactions`} amount={merchant?.withdrawals?.length || 0} />
+            <AnalyticCard width={`w-[23%]`} total={`Total Products`} amount={merchant?.products?.length || 0} />
           </div>
 
         </div>
@@ -123,16 +125,16 @@ export const DashNav = () => {
   );
 };
 
-export const AnalyticCard = ({ width }: any) => {
+export const AnalyticCard = ({ width, total, amount }: any) => {
   const location = useLocation();
   return (
     <div className={`bg-[#fff] ${width} rounded-md px-[2%] py-[1%]`}>
       <div className="flex  items-center">
         <img src={revenue} alt="" className="h-[2vh]" />
-        <p className="ml-[3%] text-[0.8rem] text-[#533AE9]">Total Revenue(₦)</p>
+        <p className="ml-[3%] text-[0.8rem] text-[#533AE9]">{total}(₦)</p>
       </div>
       <div className="flex justify-between items-center pt-[3%]">
-        <h3 className="text-[1.4rem] font-[500]">₦624,148</h3>
+        <h3 className="text-[1.4rem] font-[500]">{amount}</h3>
         {location.pathname !== "/dashboard/sales-info" ? (
           <div className="text-right">
             <p className="text-[#32C38F] text-[0.7rem]">13%</p>

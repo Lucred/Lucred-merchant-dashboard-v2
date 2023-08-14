@@ -30,6 +30,27 @@ export const loginUser = createAsyncThunk(
   }
 );
 
+export const registerUser = createAsyncThunk(
+  "registerUser",
+  async (formData: LoginData, { dispatch }) => {
+    try {
+      dispatch(fetchDataStart);
+      const response = await apiPost("/user/signup", formData);
+      toast.success(response.data.message);
+      localStorage.setItem("signature", response.data.signature);
+      localStorage.setItem("role", response.data.role);
+      dispatch(fetchDataSuccess(response.data));
+      setTimeout(() => {
+        window.location.href = "/confirm";
+      }, 2000);
+    } catch (error: any) {
+      console.log(error.response.data.error);
+      toast.error(error.response.data.Error);
+      dispatch(fetchDataFailure(error.response.data.error));
+    }
+  }
+);
+
 /**==============Get Merchant======= **/
 export const getMerchant = createAsyncThunk(
   "singleUser",
@@ -161,7 +182,9 @@ export const updateProfile = createAsyncThunk(
       const response = await apiPut(`/merchants/${id}`, formData);
       toast.success(response.data.message);
       dispatch(fetchDataSuccess(response.data));
-      window.location.reload()
+      setTimeout(() => {
+        window.location.href = "/dashboard/profile";
+      }, 2000);
     } catch (error: any) {
       toast.error(error.response.data.message);
       dispatch(fetchDataFailure(error.response.data.error));
@@ -169,26 +192,25 @@ export const updateProfile = createAsyncThunk(
   }
 );
 
-export const registerUser = createAsyncThunk(
-  "registerUser",
-  async (formData: LoginData, { dispatch }) => {
+/**==============Update Profile=======  **/
+export const withdraw = createAsyncThunk(
+  "withdraw",
+  async (formData:any, { dispatch }) => {
     try {
       dispatch(fetchDataStart);
-      const response = await apiPost("/user/signup", formData);
+      const response = await apiPut(`/merchants/withdraw`, formData);
       toast.success(response.data.message);
-      localStorage.setItem("signature", response.data.signature);
-      localStorage.setItem("role", response.data.role);
-      dispatch(fetchDataSuccess(response.data));
-      setTimeout(() => {
-        window.location.href = "/confirm";
-      }, 2000);
+      // dispatch(fetchDataSuccess(response.data));
+      // setTimeout(() => {
+      //   window.location.href = "/dashboard/profile";
+      // }, 2000);
     } catch (error: any) {
-      console.log(error.response.data.error);
-      toast.error(error.response.data.Error);
+      toast.error(error.response.data.message);
       dispatch(fetchDataFailure(error.response.data.error));
     }
   }
 );
+
 
 
 
