@@ -9,7 +9,7 @@ const UserReport = () => {
         <div className='mx-[3%]'>
             <div className="flex lg:flex-row flex-col items-start justify-between">
                 <div className='py-[1%]'>
-                    <p className='text-[0.7rem]'>Dashboard/Product</p>
+                    <p className='text-[0.7rem]'>Dashboard/UserReport</p>
                     <h3 className='text-[1.3rem] font-[500]'>Customer Report</h3>
                 </div>
                 <SelectInput  width={`lg:w-[30%] w-[70%]`} value={`Today (March 18, 2022)`}/>
@@ -18,13 +18,13 @@ const UserReport = () => {
                 <div className='w-[100%] overflow-scroll'>
                 <table className=' lg:w-[100%] rounded-md w-[250%] '>
                     <thead  >
-                    <tr className='bg-[#1100770A] text-[0.8rem]  text-[#56555B] w-[100%] px-[5%] '>
-                        <th className='font-[400] py-[1%]'>Name</th>
-                        <th className='font-[400]'>ID</th>
-                        <th className='font-[400]'>Email</th>
-                        <th className='font-[400]'>Phone No</th>
-                        <th className='font-[400]'>Address</th>
-                        <th className='font-[400]'>No of Item bought</th>
+                    <tr className='bg-[#1100770A] text-[0.8rem] w-[100%] px-[5%] '>
+                        <th className='font-[500] py-[1%]'>Name</th>
+                        <th className='font-[500]'>ID</th>
+                        <th className='font-[500]'>Email</th>
+                        <th className='font-[500]'>Phone No</th>
+                        <th className='font-[500]'>Address</th>
+                        <th className='font-[500]'>No of Item bought</th>
                     </tr>
                     </thead> 
                     <tbody>
@@ -110,19 +110,19 @@ export default UserReport
 export const CustomerReview = () => {
     return(
         <div className="bg-[#fff] rounded-md lg:w-[40%] my-[2%] px-[3%] py-[2%]">
-            <h3>Customer Review</h3>
+            <h3 className="mb-[15px]">Customer Review</h3>
             <div className="flex items-center justify-between my-[2%] ">
                 <div className="flex w-[80%] items-center">
                     <img src={customer1} alt="" className=""/>
                     <p className="text-[0.8rem] ml-[3%]">Good Product , just what i wanted.</p>
                 </div>
                 
-                <div className="flex h-[2vh]">
-                    <img src={rating} alt="" className=""/>
-                    <img src={rating} alt="" className=""/>
-                    <img src={rating} alt="" className=""/>
-                    <img src={rating} alt="" className=""/>
-                    <img src={rating} alt="" className=""/>
+                <div className="flex">
+                    <img src={rating} alt="" className="w-[15px] mx-[2px]"/>
+                    <img src={rating} alt="" className="w-[15px] mx-[2px]"/>
+                    <img src={rating} alt="" className="w-[15px] mx-[2px]"/>
+                    <img src={rating} alt="" className="w-[15px] mx-[2px]"/>
+                    <img src={rating} alt="" className="w-[15px] mx-[2px]"/>
 
                 </div>
             </div>
@@ -132,12 +132,12 @@ export const CustomerReview = () => {
                     <p className="text-[0.8rem] ml-[3%]">Good Product , just what i wanted.</p>
                 </div>
                 
-                <div className="flex h-[2vh]">
-                    <img src={rating} alt="" className=""/>
-                    <img src={rating} alt="" className=""/>
-                    <img src={rating} alt="" className=""/>
-                    <img src={rating} alt="" className=""/>
-                    <img src={rating} alt="" className=""/>
+                <div className="flex">
+                    <img src={rating} alt="" className="w-[15px] mx-[2px]"/>
+                    <img src={rating} alt="" className="w-[15px] mx-[2px]"/>
+                    <img src={rating} alt="" className="w-[15px] mx-[2px]"/>
+                    <img src={rating} alt="" className="w-[15px] mx-[2px]"/>
+                    <img src={rating} alt="" className="w-[15px] mx-[2px]"/>
 
                 </div>
             </div>
@@ -147,12 +147,12 @@ export const CustomerReview = () => {
                     <p className="text-[0.8rem] ml-[3%]">Good Product , just what i wanted.</p>
                 </div>
                 
-                <div className="flex h-[2vh]">
-                    <img src={rating} alt="" className=""/>
-                    <img src={rating} alt="" className=""/>
-                    <img src={rating} alt="" className=""/>
-                    <img src={rating} alt="" className=""/>
-                    <img src={rating} alt="" className=""/>
+                <div className="flex">
+                    <img src={rating} alt="" className="w-[15px] mx-[2px]"/>
+                    <img src={rating} alt="" className="w-[15px] mx-[2px]"/>
+                    <img src={rating} alt="" className="w-[15px] mx-[2px]"/>
+                    <img src={rating} alt="" className="w-[15px] mx-[2px]"/>
+                    <img src={rating} alt="" className="w-[15px] mx-[2px]"/>
 
                 </div>
             </div>
@@ -162,12 +162,12 @@ export const CustomerReview = () => {
                     <p className="text-[0.8rem] ml-[3%]">Good Product , just what i wanted.</p>
                 </div>
                 
-                <div className="flex h-[2vh]">
-                    <img src={rating} alt="" className=""/>
-                    <img src={rating} alt="" className=""/>
-                    <img src={rating} alt="" className=""/>
-                    <img src={rating} alt="" className=""/>
-                    <img src={rating} alt="" className=""/>
+                <div className="flex">
+                    <img src={rating} alt="" className="w-[15px] mx-[2px]"/>
+                    <img src={rating} alt="" className="w-[15px] mx-[2px]"/>
+                    <img src={rating} alt="" className="w-[15px] mx-[2px]"/>
+                    <img src={rating} alt="" className="w-[15px] mx-[2px]"/>
+                    <img src={rating} alt="" className="w-[15px] mx-[2px]"/>
 
                 </div>
             </div>
@@ -177,12 +177,12 @@ export const CustomerReview = () => {
                     <p className="text-[0.8rem] ml-[3%]">Good Product , just what i wanted.</p>
                 </div>
                 
-                <div className="flex h-[2vh]">
-                    <img src={rating} alt="" className=""/>
-                    <img src={rating} alt="" className=""/>
-                    <img src={rating} alt="" className=""/>
-                    <img src={rating} alt="" className=""/>
-                    <img src={rating} alt="" className=""/>
+                <div className="flex">
+                    <img src={rating} alt="" className="w-[15px] mx-[2px]"/>
+                    <img src={rating} alt="" className="w-[15px] mx-[2px]"/>
+                    <img src={rating} alt="" className="w-[15px] mx-[2px]"/>
+                    <img src={rating} alt="" className="w-[15px] mx-[2px]"/>
+                    <img src={rating} alt="" className="w-[15px] mx-[2px]"/>
 
                 </div>
             </div>

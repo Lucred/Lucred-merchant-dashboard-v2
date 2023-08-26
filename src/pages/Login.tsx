@@ -10,67 +10,71 @@ import { loginUser } from '../redux/actions'
 
 const Login = () => {
     const [formData, setFormData] = useState<any>({
-        email:"",
-        password:""
+        email: "",
+        password: ""
     })
+    const [loading, setLoading] = useState(false)
 
-    const handleChange = (e:any) => {
+    const handleChange = (e: any) => {
         setFormData(
-            {...formData, [e.target.name]:e.target.value}
+            { ...formData, [e.target.name]: e.target.value }
         )
     }
 
     const dispatch = useDispatch() as unknown as any
 
-    const handleSubmit = (e:any) => {
+    const handleSubmit = async (e: any) => {
+        setLoading(true)
         e.preventDefault()
         console.log("Form submitted", formData)
-        dispatch(loginUser(formData))
+        await dispatch(loginUser(formData))
+        setLoading(false)
     }
-   return (
-    <div className='flex lg:flex-row flex-col justify-between px-[5%] py-[3%] h-[100vh]'>
-        <div className='xl:w-[50%] lg:w-[60%]  py-[5%] pl-[5%] lg:block flex flex-col items-center justify-center'>
-            <img src={lucred} alt="Lucred" />
-            <div className='text-center lg:text-left'>
-                <div className='mt-[15%]'>
-                    <h3 className='font-[500] text-[2.4rem]'>Welcome back</h3>
-                    <p className='text-[#8C858D]'>Welcome back! Please enter your details. </p>
-                </div>
-                <div className='text-left my-[2%]' >
-                    <label className='text-[#171515]'>Email</label><br></br>
-                    <input type="text" name="email" placeholder="Enter your email" className='border rounded-md w-[100%] lg:w-[70%] pl-[5%] py-[1%]' onChange={handleChange} />
-                </div>
-                <div  className='text-left'>
-                    <label>Password</label><br></br>
-                    <input type="password" name="password" placeholder="Enter your password" className='border rounded-md w-[100%] lg:w-[70%] pl-[5%] py-[1%]' onChange={handleChange} />
-                </div>
-                <div className='flex justify-between items-center w-[100%] lg:w-[70%] my-[2%]'>
-                    <div className=' flex w-[35%] justify-between items-center'>
-                        <input type="checkbox" className='bg-[#533AE9]'/>
-                        <label className=''>Remember me</label>
+
+    return (
+        <div className='flex lg:flex-row flex-col justify-between px-[5%] py-[3%] h-[100vh]'>
+            <div className='xl:w-[50%] lg:w-[60%]  py-[5%] pl-[5%] lg:block flex flex-col items-center justify-center'>
+                <img src={lucred} alt="Lucred" />
+                <div className='text-center lg:text-left'>
+                    <div className='mt-[15%]'>
+                        <h3 className='font-[500] text-[2.4rem]'>Welcome back</h3>
+                        <p className='text-[#8C858D]'>Welcome back! Please enter your details. </p>
                     </div>
-                    <p>Forgot password?</p> 
+                    <div className='text-left my-[2%]' >
+                        <label className='text-[#171515]'>Email</label><br></br>
+                        <input type="text" name="email" placeholder="Enter your email" className='border rounded-md w-[100%] lg:w-[70%] pl-[5%] py-[1%]' onChange={handleChange} />
+                    </div>
+                    <div className='text-left'>
+                        <label>Password</label><br></br>
+                        <input type="password" name="password" placeholder="Enter your password" className='border rounded-md w-[100%] lg:w-[70%] pl-[5%] py-[1%]' onChange={handleChange} />
+                    </div>
+                    <div className='flex justify-between items-center w-[100%] lg:w-[70%] my-[2%]'>
+                        <div className=' flex xl:w-[50%] lg:w-[35%] items-center'>
+                            <input type="checkbox" className='bg-[#533AE9]' />
+                            <label className='ml-[5px]'>Remember me</label>
+                        </div>
+                        <p>Forgot password?</p>
+                    </div>
+                    <button className='bg-[#533AE9] text-white rounded-md w-[70%]' disabled={loading} onClick={handleSubmit} onKeyDown={handleSubmit}>{loading ? 'Please wait...' : 'Sign in'}</button>
+                    <p className=' text-center text-[.8rem] lg:w-[70%] my-[3%]'>Want to become a Merchant? Sign up</p>
+                    <div className='flex items-center mt-[10%]'>
+                        <img src={mi} alt="mi" className='w-[40px] h-[40px] mr-[5px]' />
+                        <img src={apple} alt="apple" className='w-[40px] h-[40px] mr-[5px]' />
+                        <img src={huawei} alt="huawei" className='w-[40px] h-[40px] mr-[5px]' />
+                        <img src={alcatel} alt="alcatel" className='w-[40px] h-[40px] mr-[5px]' />
+                        <p className='text-[.8rem]'>Join over 1000+ Merchants</p>
+                    </div>
                 </div>
-                <button className='bg-[#533AE9] text-white rounded-md w-[70%]' onClick={handleSubmit} onKeyDown={handleSubmit}>Sign in</button>
-                <p className=' text-center lg:w-[70%] my-[3%]'>Want to become a Merchant? Sign up</p> 
-                <div className='flex items-center mt-[10%]'>
-                    <img src={mi} alt="mi" />
-                    <img src={apple} alt="apple" />
-                    <img src={huawei} alt="huawei" />
-                    <img src={alcatel} alt="alcatel" />
-                    <p>Join over 1000+ Merchants</p>
-                </div>
+
+            </div>
+            <div className='flex flex-col items-center justify-center bg-[#1100770A] xl:w-[50%] lg:w-[45%] rounded-md py-[5%] text-center'>
+                <h2 className='text-[1.5rem] lg:text-[2.2rem] text-[#110077] font-[600]'>Increase Sales with Lucred</h2>
+                <p className='w-[70%] mx-auto text-[0.9rem]'>Allow your customers buy now and pay overtime at zero-cost to you, increase revenue by 50%</p>
+                <img src={loginImg} alt="loginImg" className='lg:h-[35vh] xl:h-[65vh] my-[3%]' />
             </div>
 
         </div>
-        <div className='flex flex-col items-center justify-center bg-[#1100770A] xl:w-[50%] lg:w-[45%] rounded-md py-[5%] text-center'>
-            <h2 className='text-[1.5rem] lg:text-[2.2rem] text-[#110077] font-[600]'>Increase Sales with Lucred</h2>
-            <p className='w-[70%] mx-auto text-[0.9rem]'>Allow your customers buy now and pay overtime at zero-cost to you, increase revenue by 50%</p>
-            <img src={loginImg} alt="loginImg" className='lg:h-[35vh] xl:h-[65vh] my-[3%]' />
-        </div>
-        
-    </div>
-  )
+    )
 }
 
 export default Login

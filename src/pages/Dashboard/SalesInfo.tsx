@@ -28,11 +28,11 @@ const SalesInfo = () => {
     },[])
     
   return (
-    <div className={`${window.innerWidth > 768 ? `ml-[15%]`: `ml-[10%]`} mr-[5%] bg-[#1100770A] h-[100vh] `}>
+    <div className={`${window.innerWidth > 768 ? `ml-[15%]`: `ml-[10%]`} mr-[5%] bg-[#1100770A] min-h-[100vh] `}>
         <div className='mx-[3%]'>
             <div className="flex items-center justify-between">
                 <div className='py-[1%]'>
-                    <p className='text-[0.7rem]'>Dashboard/Product</p>
+                    <p className='text-[0.7rem]'>Dashboard/Sales</p>
                     <h3 className='text-[1.3rem] font-[500]'>Sales Info</h3>
                 </div>
                 {location.pathname=== "/dashboard/sales-info" ? <Link to="" className='bg-[#533AE9] lg:w-[15%] w-[50%] h-[5vh] text-[#fff] mr-[5%] rounded-md flex justify-center items-center' onClick={toggleModal}>Withdraw</Link>: null}
@@ -53,13 +53,13 @@ const SalesInfo = () => {
                 <table className=' lg:w-[100%] border rounded-md my-[2%] w-[250%]'>
                     <thead  >
                     <tr className='bg-[#1100770A] text-[0.8rem]  text-[#56555B] w-[100%] px-[5%] bg-[#fff]'>
-                        <th className='font-[400] py-[1%]'>ID</th>
-                        <th className='font-[400]'>Product name</th>
-                        <th className='font-[400]'>Quantity</th>
-                        <th className='font-[400]'>Total Price</th>
-                        <th className='font-[400]'>Customer's name</th>
-                        <th className='font-[400]'>Phone Number</th>
-                        <th className='font-[400] '>Date</th>
+                        <th className='font-[500] py-[1%]'>ID</th>
+                        <th className='font-[500]'>Product name</th>
+                        <th className='font-[500]'>Quantity</th>
+                        <th className='font-[500]'>Total Price</th>
+                        <th className='font-[500]'>Customer's name</th>
+                        <th className='font-[500]'>Phone Number</th>
+                        <th className='font-[500] '>Date</th>
                     </tr>
                     </thead> 
                     <tbody>
@@ -167,7 +167,7 @@ export const WithdrawModal = ({func}:any) =>{
             <div className="bg-[#fff] lg:w-[40%] w-[80%] rounded-md ">
                 <div className="bg-[#1100770A] px-[3%] py-[2%] flex justify-between items-center">
                     <h3>Withdrawal Request</h3>
-                    <img src={xmark} alt="" className="h-[2vh]" onClick={func}/>
+                    <img src={xmark} alt="" className="cursor-pointer h-[2vh]" onClick={func}/>
                 </div>
                 <div className="flex items-center justify-between my-[3%] px-[3%]">
                     <label className="text-[0.9rem]">Amount Requested</label>

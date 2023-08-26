@@ -52,7 +52,7 @@ const Settings = () => {
             <div className="flex items-center justify-between">
                 <div>
                     <div className='py-[1%]'>
-                        <p className='text-[0.7rem]'>Dashboard/Product</p>
+                        <p className='text-[0.7rem]'>Dashboard/Settings</p>
                         <h3 className='text-[1.3rem] font-[500]'>Settings</h3>
                     </div>
                     <h3 className="lg:text-[1.5rem] text-[1.2rem] font-[500]">User Information</h3>

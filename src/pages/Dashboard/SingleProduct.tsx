@@ -35,7 +35,7 @@ const SingleProduct = () => {
     <div
       className={`${
         window.innerWidth > 768 ? `ml-[15%]` : `ml-[10%]`
-      } mr-[5%] bg-[#1100770A] h-[100vh] `}
+      } mr-[5%] bg-[#1100770A] min-h-[100vh] `}
     >
       <div className="mx-[3%]">
         <div className="py-[1%]">
