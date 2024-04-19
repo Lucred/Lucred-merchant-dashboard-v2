@@ -29,6 +29,7 @@ function App() {
         <ToastContainer />
         <Router>
           <Routes>
+            <Route path="/" element={<LazyLogin />} />
             <Route path="/login" element={<LazyLogin />} />
             <Route path="/dashboard/*" element={<ProtectRoute><LazyDashboard /></ProtectRoute>} />
           </Routes>
