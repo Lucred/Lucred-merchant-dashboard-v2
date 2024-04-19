@@ -71,7 +71,7 @@ const DashboardHome = () => {
           <div className="flex justify-between w-[250%] lg:w-[100%] my-[5%] lg:my-[0%] ">
             <AnalyticCard width={`w-[23%]`} icon={revenue} total={`Total Revenue`} amount={`₦` + merchant?.currentRevenue} />
             <AnalyticCard width={`w-[23%]`} icon={customer} total={`Total Customers`} amount={merchant?.customers?.length || 0} />
-            <AnalyticCard width={`w-[23%]`} icon={transaction} total={`Total Transactions`} amount={merchant?.withdrawals?.length || 0} />
+            <AnalyticCard width={`w-[23%]`} icon={transaction} total={`Total Transactions`} amount={merchant?.totalOrders} />
             <AnalyticCard width={`w-[23%]`} icon={product} total={`Total Products`} amount={merchant?.products?.length || 0} />
           </div>
 
@@ -122,7 +122,7 @@ export const DashNav = () => {
           </Link>
         ) : null}
         <img src={bellRing} alt="" className="h-[2vh] mr-[5%]" />
-        <img src={logo || avatar} alt="" className="h-[2vh] mr-[5%]" />
+        <img src={logo || avatar} alt="" className="h-[2.5vh] w-[2.5vh] mr-[5%] rounded-[50%]" />
       </div>
     </div>
   );

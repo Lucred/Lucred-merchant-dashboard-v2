@@ -15,27 +15,30 @@ import { useDispatch, useSelector } from "react-redux";
 import { SelectInput, TextAreaInput, TextInput } from "./DashboardAddProduct";
 
 const SingleProduct = () => {
-    const dispatch = useDispatch() as unknown as any
-    const id = localStorage.getItem("merchantId") as unknown as string
+  const dispatch = useDispatch() as unknown as any
+  const id = localStorage.getItem("merchantId") as unknown as string
 
-    const products = useSelector((state:any) => state.product)
-    console.log(products)
+  const products = useSelector((state: any) => state.product)
+  console.log(products)
 
-    const {productId} = useParams()
+  const { productId } = useParams()
 
-    const product = products.find((item:any) => item._id === productId)
-    
-    console.log('pro', product)
+  const product = products.find((item: any) => item._id === productId)
 
-    useEffect(() => {
-        dispatch(getProducts(id))
-    }, [])
-  
+  console.log('pro', product)
+
+  const numberWithCommas = (x: any) => {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  }
+
+  useEffect(() => {
+    dispatch(getProducts(id))
+  }, [])
+
   return (
     <div
-      className={`${
-        window.innerWidth > 768 ? `ml-[15%]` : `ml-[10%]`
-      } mr-[5%] bg-[#1100770A] min-h-[100vh] `}
+      className={`${window.innerWidth > 768 ? `ml-[15%]` : `ml-[10%]`
+        } mr-[5%] bg-[#1100770A] min-h-[100vh] `}
     >
       <div className="mx-[3%]">
         <div className="py-[1%]">
@@ -47,7 +50,7 @@ const SingleProduct = () => {
 
         <form
           className="flex lg:flex-row flex-col justify-between"
-        
+
         >
           <div className="bg-[#fff] lg:w-[40%] px-[3%] py-[2%] rounded-md ">
             <TextInput
@@ -59,15 +62,15 @@ const SingleProduct = () => {
               error="Do not exceed 20 character when entering product name."
               readonly={true}
             />
-   
-              <TextInput
-                label="Category"
-                name="category"
-                width={`w-[100%]`}
-                value={product?.category}
-                readonly={true}
-              />
-             
+
+            <TextInput
+              label="Category"
+              name="category"
+              width={`w-[100%]`}
+              value={product?.category}
+              readonly={true}
+            />
+
             <TextInput
               label="Brand"
               name="subCategory"
@@ -95,7 +98,7 @@ const SingleProduct = () => {
                   alt=""
                   className="w-[auto] border border-dashed border-[#8C858D] rounded-md w-[55%]"
                 />
-              
+
 
                 {/* <img src={drag1} alt="" className="h-[20vh] " />
 
@@ -125,7 +128,7 @@ const SingleProduct = () => {
                 name="price"
                 placeholder={`₦35,000`}
                 width={`w-[100%]`}
-                value={product?.price}
+                value={numberWithCommas(product?.price)}
               />
               {/* <SelectInput
                 label="Product Date"
@@ -134,11 +137,11 @@ const SingleProduct = () => {
               /> */}
             </div>
             <Link to={`/dashboard/update-product/${productId}`}
-                  type="submit"
-                  className="bg-[#533AE9] w-[40%] h-[5vh] text-[#fff] mr-[5%] rounded-md flex justify-center items-center"
-                >
-                  Update Product
-                </Link >
+              type="submit"
+              className="bg-[#533AE9] w-[40%] h-[5vh] text-[#fff] mr-[5%] rounded-md flex justify-center items-center"
+            >
+              Update Product
+            </Link >
 
           </div>
         </form>

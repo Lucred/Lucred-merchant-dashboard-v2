@@ -52,13 +52,13 @@ const DashboardProduct = () => {
                                 {products?.map((elem: any, id: number) => (
                                     <tr key={id} className='bg-[#FFFFFF] text-[0.8rem] text-[#171515] text-center w-[100%] h-[10vh] '>
                                         <td className='font-[400] flex justify-center items-center h-[10vh]'><img src={elem.coverImage} alt="" className='h-[50px]' /></td>
-                                        <td className='font-[400]'>{elem.title}</td>
-                                        <td className='font-[400]'>{elem.subCategory}</td>
-                                        <td className='font-[400]'>{elem.category}</td>
-                                        <td className='font-[400]'>{elem.description}</td>
-                                        <td className='font-[400]'>100</td>
-                                        <td className='font-[400]'>₦{elem.price}</td>
-                                        <td className='font-[400]  '><div className='flex items-center justify-center'><Link to={`/dashboard/product/${elem._id}`}><img src={view} className='mx-[2px]' alt="" /></Link><Link to={`/dashboard/update-product/${elem._id}`}><img src={edit} className='mx-[2px]' alt="" /> </Link><img src={trash} className='mx-[2px]' alt="" onClick={async () => await dispatch(deleteProduct(elem._id))} /> </div> </td>
+                                        <td className='font-[400] px-[10px]'>{elem.title}</td>
+                                        <td className='font-[400] px-[10px]'>{elem.subCategory}</td>
+                                        <td className='font-[400] px-[10px]'>{elem.category}</td>
+                                        <td className='font-[400] px-[10px]'>{elem.description}</td>
+                                        <td className='font-[400] px-[10px]'>100</td>
+                                        <td className='font-[400] px-[10px]'>₦{elem.price}</td>
+                                        <td className='font-[400] w-[100px]'><div className='flex items-center justify-center'><Link to={`/dashboard/product/${elem._id}`}><img src={view} className='mx-[2px]' alt="" /></Link><Link to={`/dashboard/update-product/${elem._id}`}><img src={edit} className='mx-[2px]' alt="" /> </Link><img src={trash} className='mx-[2px]' alt="" onClick={async () => await dispatch(deleteProduct(elem._id))} /> </div> </td>
 
                                     </tr>))}
 

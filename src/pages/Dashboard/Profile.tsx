@@ -72,14 +72,14 @@ const Profile = () => {
                 </div>
                 <button onClick={handleLogo} className='bg-[#533AE9] text-[#fff]'>update logo</button>
                 <div className=' py-[2%] px-[1%] rounded-md lg:grid grid-cols-2 grid-rows-4 gap-x-8 mt-[15%] lg:mt-[0%]' >
-                    <TextInput label='Email Address' placeholder='DahunsiTemmyforgood@gmail.com' type='email' value={merchant.email} onChange={handleChange} readonly={true} />
-                    <TextInput label='Account Name' placeholder='Dahunsi Temitope' onChange={handleChange} value={merchant.bankAccountInfo?.accountName} readonly={true} />
-                    <TextInput label='Company Name' placeholder='EasyGadgets' onChange={handleChange} value={merchant.companyName} readonly={true} />
-                    <TextInput label='Account Number' placeholder='1234567890' type='number' onChange={handleChange} value={merchant.bankAccountInfo?.accountNumber} readonly={true} />
-                    <TextInput label='Contact Number' placeholder='1234567890' type='number' onChange={handleChange} value={merchant.phone} readonly={true} />
-                    <TextInput label='Bank Name' placeholder='GTB' onChange={handleChange} value={merchant.bankAccountInfo?.bankName} readonly={true} />
-                    <TextInput label='Address' placeholder='House 38/40 Sunshine Estate' value={"N/A"} onChange={handleChange} readonly={true} />
-                    <SelectInput label='Country' value='Nigeria' onChange={handleChange} readonly={true} />
+                    <TextInput label='Email Address' placeholder='Email Address' type='email' value={merchant.email} onChange={handleChange} readonly={true} />
+                    <TextInput label='Account Name' placeholder='Account Name' onChange={handleChange} value={merchant.bankAccountInfo?.accountName} readonly={true} />
+                    <TextInput label='Company Name' placeholder='Company Name' onChange={handleChange} value={merchant.companyName} readonly={true} />
+                    <TextInput label='Account Number' placeholder='Account Number' type='number' onChange={handleChange} value={merchant.bankAccountInfo?.accountNumber} readonly={true} />
+                    <TextInput label='Contact Number' placeholder='Contact Number' type='number' onChange={handleChange} value={merchant.phone} readonly={true} />
+                    <TextInput label='Bank Name' placeholder='Bank Name' onChange={handleChange} value={merchant.bankAccountInfo?.bankName} readonly={true} />
+                    <TextInput label='Address' placeholder='Address' value={"N/A"} onChange={handleChange} readonly={true} />
+                    <SelectInput label='Country' value='Country' onChange={handleChange} readonly={true} />
                 </div>
                 <div className='flex justify-end'>
                     <Link to="/dashboard/settings" className='bg-[#533AE9] w-[50%] lg:w-[10%] h-[5vh] text-[#fff] rounded-md flex justify-center items-center'>Edit</Link>

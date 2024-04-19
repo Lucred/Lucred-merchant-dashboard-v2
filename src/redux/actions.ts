@@ -30,6 +30,21 @@ export const loginUser = createAsyncThunk(
   }
 );
 
+export const resetUser = createAsyncThunk(
+  "resetUser",
+  async (email: string, { dispatch }) => {
+    try {
+      dispatch(fetchDataStart);
+      const response = await apiGet(`/merchants/forgot-password?email=${email}`);
+      console.log(response)
+    } catch (error: any) {
+      console.log(error.response.data.error);
+      toast.error(error.response.data.Error);
+      dispatch(fetchDataFailure(error.response.data.error));
+    }
+  }
+);
+
 export const registerUser = createAsyncThunk(
   "registerUser",
   async (formData: LoginData, { dispatch }) => {
@@ -198,7 +213,7 @@ export const withdraw = createAsyncThunk(
   async (formData:any, { dispatch }) => {
     try {
       dispatch(fetchDataStart);
-      const response = await apiPut(`/merchants/withdraw`, formData);
+      const response = await apiPost(`/merchants/withdraw`, formData);
       toast.success(response.data.message);
       // dispatch(fetchDataSuccess(response.data));
       // setTimeout(() => {
