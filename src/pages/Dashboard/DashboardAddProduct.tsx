@@ -113,7 +113,7 @@ const DashboardAddProduct = () => {
       setupdateData({
         ...updateData,
         [name]: e.target.files[0],
-      })
+      });
     } else {
       console.log(name, value);
       setFormData({
@@ -124,7 +124,7 @@ const DashboardAddProduct = () => {
       setupdateData({
         ...updateData,
         [name]: value,
-      })
+      });
     }
   };
 
@@ -143,7 +143,7 @@ const DashboardAddProduct = () => {
 
   const updateSubmit = async (e: any) => {
     e.preventDefault();
-    await dispatch(updateProduct({ id: productId, formData:updateData }));
+    await dispatch(updateProduct({ id: productId, formData: updateData }));
   };
 
   const { productId } = useParams();
@@ -154,32 +154,32 @@ const DashboardAddProduct = () => {
         window.innerWidth > 768 ? `ml-[15%]` : `ml-[10%]`
       } mr-[5%] bg-[#1100770A] min-h-[100vh] `}
     >
-      <div className="mx-[3%]">
-        <div className="py-[1%]">
-          <p className="text-[0.7rem]">Dashboard/Product</p>
-          <h3 className="text-[1.3rem] font-[500]">
+      <div className='mx-[3%]'>
+        <div className='py-[1%]'>
+          <p className='text-[0.7rem]'>Dashboard/Product</p>
+          <h3 className='text-[1.3rem] font-[500]'>
             {productId ? ` Update Product` : `Add Product`}
           </h3>
         </div>
 
         <form
-          className="flex lg:flex-row flex-col justify-between"
+          className='flex lg:flex-row flex-col justify-between'
           onSubmit={productId ? updateSubmit : handleSubmit}
         >
-          <div className="bg-[#fff] lg:w-[40%] px-[3%] py-[2%] rounded-md ">
+          <div className='bg-[#fff] lg:w-[40%] px-[3%] py-[2%] rounded-md '>
             <TextInput
-              label="Product Name"
-              placeholder="Product Name"
-              type="text"
-              name="title"
+              label='Product Name'
+              placeholder='Product Name'
+              type='text'
+              name='title'
               value={formData.title}
               onChange={handleChange}
-              error="Do not exceed 20 character when entering product name."
+              error='Do not exceed 20 character when entering product name.'
             />
-            <div className="flex justify-between w-[100%] ">
+            <div className='flex justify-between w-[100%] '>
               <SelectInput
-                label="Category"
-                name="category"
+                label='Category'
+                name='category'
                 data={categories}
                 width={`w-[100%]`}
                 onChange={handleChange}
@@ -191,42 +191,42 @@ const DashboardAddProduct = () => {
               /> */}
             </div>
             <SelectInput
-              label="Brand"
-              name="subCategory"
+              label='Brand'
+              name='subCategory'
               data={subCategories?.subCategories}
               onChange={handleChange}
             />
             <TextInput
-              label="Description"
-              name="description"
+              label='Description'
+              name='description'
               value={formData?.description}
               onChange={handleChange}
             />
             <TextAreaInput
-              label="Specifications"
-              name="specifications"
+              label='Specifications'
+              name='specifications'
               value={desc}
               chips={chips}
               del={handleDeleteChip}
               onChange={onDescription}
               onKeyPress={onEnterDescription}
-              error="Do not exceed 20 character when entering product description. "
+              error='Do not exceed 20 character when entering product description. '
             />
           </div>
-          <div className="bg-[#fff] lg:w-[50%] px-[3%] py-[2%] rounded-md ">
+          <div className='bg-[#fff] lg:w-[50%] px-[3%] py-[2%] rounded-md '>
             <div>
-              <h3 className="text-[#110077]">Product Images</h3>
-              <div className="flex justify-between">
+              <h3 className='text-[#110077]'>Product Images</h3>
+              <div className='flex justify-between'>
                 <img
                   src={images || shoes}
-                  alt=""
-                  className="h-[20vh] border border-dashed border-[#8C858D] rounded-md w-[55%]"
+                  alt=''
+                  className='h-[20vh] border border-dashed border-[#8C858D] rounded-md w-[55%]'
                   onClick={handleRef}
                 />
                 <input
-                  type="file"
-                  name="coverImage"
-                  className="hidden"
+                  type='file'
+                  name='coverImage'
+                  className='hidden'
                   ref={imageRef}
                   onChange={handleChange}
                 />
@@ -253,10 +253,10 @@ const DashboardAddProduct = () => {
               </div>
               <TextInput label="Stock" placeholder={`24`} />
             </div> */}
-            <div >
+            <div>
               <TextInput
-                label="Price"
-                name="price"
+                label='Price'
+                name='price'
                 value={formData.price}
                 placeholder={`₦35,000`}
                 onChange={handleChange}
@@ -269,25 +269,25 @@ const DashboardAddProduct = () => {
               /> */}
             </div>
 
-            <div className="flex justify-center my-[8%]">
+            <div className='flex justify-center my-[8%]'>
               {productId ? (
                 <button
-                  type="submit"
-                  className="bg-[#533AE9] w-[40%] h-[5vh] text-[#fff] mr-[5%] rounded-md flex justify-center items-center"
+                  type='submit'
+                  className='bg-[#533AE9] w-[40%] h-[5vh] text-[#fff] mr-[5%] rounded-md flex justify-center items-center'
                 >
                   Update Product
                 </button>
               ) : (
                 <button
-                  type="submit"
-                  className="bg-[#533AE9] w-[50%] h-[5vh] text-[#fff] mr-[5%] rounded-md flex justify-center items-center t"
+                  type='submit'
+                  className='bg-[#533AE9] w-[50%] h-[5vh] text-[#fff] mr-[5%] rounded-md flex justify-center items-center t'
                 >
                   Add Product
                 </button>
               )}
               <Link
-                to="/dashboard/product"
-                className="bg-[#FAFAFA] w-[50%] h-[5vh] text-[#533AE9] mr-[5%] rounded-md flex justify-center items-center"
+                to='/dashboard/product'
+                className='bg-[#FAFAFA] w-[50%] h-[5vh] text-[#533AE9] mr-[5%] rounded-md flex justify-center items-center'
               >
                 Cancel
               </Link>
@@ -309,12 +309,12 @@ export const TextInput = ({
   value,
   onChange,
   error,
-  width, 
-  readonly
+  width,
+  readonly,
 }: any) => {
   return (
-    <div className="flex flex-col py-[2%]">
-      <label htmlFor={label} className="text-[0.9rem] text-[#110077] ">
+    <div className='flex flex-col py-[2%]'>
+      <label htmlFor={label} className='text-[0.9rem] text-[#110077] '>
         {label}
       </label>
       <input
@@ -327,7 +327,7 @@ export const TextInput = ({
         className={`border border-[#11007766] rounded-md h-[6vh] lg:h-[4vh] px-[2%] outline-none ${width}`}
         readOnly={readonly}
       />
-      {error && <p className="text-[0.7rem] text-[#8C858D]">{error}</p>}
+      {error && <p className='text-[0.7rem] text-[#8C858D]'>{error}</p>}
     </div>
   );
 };
@@ -342,12 +342,12 @@ export const SelectInput = ({
   onChange,
   width,
   error,
-  readonly
+  readonly,
 }: any) => {
   const location = useLocation();
   return (
     <div className={`flex flex-col ${width} py-[2%]`}>
-      <label htmlFor={label} className="text-[0.9rem] text-[#110077] ">
+      <label htmlFor={label} className='text-[0.9rem] text-[#110077] '>
         {label}
       </label>
       <select
@@ -359,8 +359,8 @@ export const SelectInput = ({
             : null
         }`}
         disabled={readonly}
-      > 
-      <option>select</option>
+      >
+        <option>select</option>
         {name === "category"
           ? data?.map((elem: any, id: number) => (
               <option key={id} value={elem.name}>
@@ -392,52 +392,54 @@ export const TextAreaInput = ({
 }: any) => {
   return (
     <div>
-      <label htmlFor={label} className="text-[0.9rem] text-[#110077] ">
+      <label htmlFor={label} className='text-[0.9rem] text-[#110077] '>
         {label}
       </label>
       <div
         className={`flex flex-col ${width} py-[2%] border border-[#11007766] rounded-md`}
       >
-        <div className="flex flex-wrap ">
+        <div className='flex flex-wrap '>
           {chips?.map((chip: string, index: number) => (
             <Chip key={index} text={chip} onDelete={() => del(index)} />
           ))}
         </div>
-        {
-          (label = "Specifications" ? (
-            <input
-              className=" px-[2%] outline-none w-[100%]"
-              name={name}
-              value={value}
-              onChange={onChange}
-              onKeyDown={onKeyPress}
-            ></input>
-          ) : (
-            <textarea
-              className=" px-[2%] outline-none w-[100%]"
-              name={name}
-              value={value}
-              onChange={onChange}
-            ></textarea>
-          ))
-        }
+        {label === "Specifications" ? (
+          <input
+            className=' px-[2%] outline-none w-[100%]'
+            name={name}
+            value={value}
+            onChange={onChange}
+            onKeyDown={onKeyPress}
+          ></input>
+        ) : (
+          <textarea
+            className=' px-[2%] outline-none w-[100%]'
+            name={name}
+            value={value}
+            onChange={onChange}
+          ></textarea>
+        )}
       </div>
-      {error && <p className="text-[0.7rem] text-[#8C858D]">{error}</p>}
+      {error && <p className='text-[0.7rem] text-[#8C858D]'>{error}</p>}
     </div>
   );
 };
 
 const Chip = ({ text, onDelete }: any) => {
-  const location = useLocation()
+  const location = useLocation();
   return (
-    <div className="chip bg-[#fff] border border-[#ccc] w-[auto] flex justify-between items-center py-[2%] px-[3%] rounded-md mx-[2%] my-[2%]">
-      <span className="chip-text">{text}</span>
-      {location.pathname === '/dashboard/add-product' ? <button
-        className="h-[2px] w-[2px] flex justify-center items-center ml-[5%] bg-[#fff]"
-        onClick={onDelete}
-      >
-        &times;
-      </button> : ''}
+    <div className='chip bg-[#fff] border border-[#ccc] w-[auto] flex justify-between items-center py-[2%] px-[3%] rounded-md mx-[2%] my-[2%]'>
+      <span className='chip-text'>{text}</span>
+      {location.pathname === "/dashboard/add-product" ? (
+        <button
+          className='h-[2px] w-[2px] flex justify-center items-center ml-[5%] bg-[#fff]'
+          onClick={onDelete}
+        >
+          &times;
+        </button>
+      ) : (
+        ""
+      )}
     </div>
   );
 };

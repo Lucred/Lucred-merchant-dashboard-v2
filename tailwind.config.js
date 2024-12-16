@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 /** @type {import('tailwindcss').Config} */
 export default {
   content: [
@@ -5,10 +6,10 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}", // <= no spaces
   ],
   theme: {
-    extend: {
-    },
-
+    extend: {},
   },
-  plugins: [],
-}
-
+  plugins: [
+    // ...
+    require("tailwind-scrollbar"),
+  ],
+};
