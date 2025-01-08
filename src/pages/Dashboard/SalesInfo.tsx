@@ -3,9 +3,10 @@ import { SelectInput } from "./DashboardAddProduct";
 import { AnalyticCard } from "./DashboardHome";
 import phone from "../../assets/phone.png";
 import xmark from "../../assets/xmark.png";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { fetchOrderData, getMerchant, withdraw } from "../../redux/actions";
 import { useDispatch, useSelector } from "react-redux";
+import Pagination from "../../components/Pagination";
 
 const formatDate = (dateString: any) => {
   const date = new Date(dateString);
@@ -24,9 +25,22 @@ const SalesInfo = () => {
   const location = useLocation();
   const orders = useSelector((state: any) => state.data);
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const ordersPerPage = 10;
+
   const [showModal, setShowModal] = useState(false);
   const toggleModal = () => {
     setShowModal(!showModal);
+  };
+
+  const currentOrders = useMemo(() => {
+    const indexOfLastOrder = currentPage * ordersPerPage;
+    const indexOfFirstOrder = indexOfLastOrder - ordersPerPage;
+    return orders.slice(indexOfFirstOrder, indexOfLastOrder);
+  }, [orders, currentPage]);
+
+  const handlePageChange = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
   };
 
   const merchant = useSelector((state: any) => state.merchant);
@@ -68,12 +82,12 @@ const SalesInfo = () => {
               <AnalyticCard
                 width={`w-[45%]`}
                 total={`Sales`}
-                amount={`₦` + merchant?.currentRevenue || 0}
+                amount={`₦` + merchant?.walletBalance || 0}
               />
               <AnalyticCard
                 width={`w-[45%]`}
                 total={`Balance`}
-                amount={`₦` + merchant?.walletBalance || 0}
+                amount={`₦` + merchant?.availableBalance || 0}
               />
             </div>
           </div>
@@ -83,7 +97,7 @@ const SalesInfo = () => {
             value={`Today (March 18, 2022)`}
           />
         </div>
-        <div className='w-[100%] overflow-scroll'>
+        <div className='w-[100%] overflow-scroll scrollbar-none'>
           <table className=' lg:w-[100%] border rounded-md my-[2%] w-[250%]'>
             <thead>
               <tr className='bg-[#1100770A] text-[0.8rem]  text-[#56555B] w-[100%] px-[5%] bg-[#fff]'>
@@ -97,7 +111,7 @@ const SalesInfo = () => {
               </tr>
             </thead>
             <tbody className=''>
-              {orders && orders.length > 0 ? (
+              {currentOrders && currentOrders.length > 0 ? (
                 orders.map((order: any, index: number) => (
                   <tr
                     key={order.id}
@@ -106,7 +120,7 @@ const SalesInfo = () => {
                     <td className='font-[400] py-[1%]'>#{index + 1}</td>
                     <td className='font-[400] flex justify-left items-center h-[8vh] ml-[10%] md:ml-[20%]'>
                       <img
-                        src={phone}
+                        src={order.productImage}
                         alt={order.productName}
                         className='h-[3vh] mr-[5%] truncate '
                       />{" "}
@@ -127,109 +141,13 @@ const SalesInfo = () => {
                 </tr>
               )}
             </tbody>
-            {/* <tbody>
-              {" "}
-              <tr className='bg-[#1100770A] text-[0.8rem] text-[#56555B] text-center w-[100%] '>
-                <td className='font-[400] py-[1%]'>#24567</td>{" "}
-                <td className='font-[400] flex justify-center items-center h-[8vh]'>
-                  <img src={phone} alt='' className='h-[3vh] mr-[5%]' /> iphone
-                  XR
-                </td>
-                <td className='font-[400]'>₦160,000</td>
-                <td className='font-[400]'>₦160,000</td>
-                <td className='font-[400]'>Abiola Jimoh</td>
-                <td className='font-[400]'>08130601026</td>
-                <td className='font-[400]'>
-                  October 24th 2022, 4:18:32 am
-                </td>{" "}
-              </tr>{" "}
-              <tr className='bg-[#1100770A] text-[0.8rem] text-[#56555B] text-center w-[100%] '>
-                <td className='font-[400] py-[1%]'>#24567</td>{" "}
-                <td className='font-[400] flex justify-center items-center h-[8vh]'>
-                  <img src={phone} alt='' className='h-[3vh] mr-[5%]' /> iphone
-                  XR
-                </td>
-                <td className='font-[400]'>₦160,000</td>
-                <td className='font-[400]'>₦160,000</td>
-                <td className='font-[400]'>Abiola Jimoh</td>
-                <td className='font-[400]'>08130601026</td>
-                <td className='font-[400]'>
-                  October 24th 2022, 4:18:32 am
-                </td>{" "}
-              </tr>{" "}
-              <tr className='bg-[#1100770A] text-[0.8rem] text-[#56555B] text-center w-[100%] '>
-                <td className='font-[400] py-[1%]'>#24567</td>{" "}
-                <td className='font-[400] flex justify-center items-center h-[8vh]'>
-                  <img src={phone} alt='' className='h-[3vh] mr-[5%]' /> iphone
-                  XR
-                </td>
-                <td className='font-[400]'>₦160,000</td>
-                <td className='font-[400]'>₦160,000</td>
-                <td className='font-[400]'>Abiola Jimoh</td>
-                <td className='font-[400]'>08130601026</td>
-                <td className='font-[400]'>
-                  October 24th 2022, 4:18:32 am
-                </td>{" "}
-              </tr>{" "}
-              <tr className='bg-[#1100770A] text-[0.8rem] text-[#56555B] text-center w-[100%] '>
-                <td className='font-[400] py-[1%]'>#24567</td>{" "}
-                <td className='font-[400] flex justify-center items-center h-[8vh]'>
-                  <img src={phone} alt='' className='h-[3vh] mr-[5%]' /> iphone
-                  XR
-                </td>
-                <td className='font-[400]'>₦160,000</td>
-                <td className='font-[400]'>₦160,000</td>
-                <td className='font-[400]'>Abiola Jimoh</td>
-                <td className='font-[400]'>08130601026</td>
-                <td className='font-[400]'>
-                  October 24th 2022, 4:18:32 am
-                </td>{" "}
-              </tr>{" "}
-              <tr className='bg-[#1100770A] text-[0.8rem] text-[#56555B] text-center w-[100%] '>
-                <td className='font-[400] py-[1%]'>#24567</td>{" "}
-                <td className='font-[400] flex justify-center items-center h-[8vh]'>
-                  <img src={phone} alt='' className='h-[3vh] mr-[5%]' /> iphone
-                  XR
-                </td>
-                <td className='font-[400]'>₦160,000</td>
-                <td className='font-[400]'>₦160,000</td>
-                <td className='font-[400]'>Abiola Jimoh</td>
-                <td className='font-[400]'>08130601026</td>
-                <td className='font-[400]'>
-                  October 24th 2022, 4:18:32 am
-                </td>{" "}
-              </tr>{" "}
-              <tr className='bg-[#1100770A] text-[0.8rem] text-[#56555B] text-center w-[100%] '>
-                <td className='font-[400] py-[1%]'>#24567</td>{" "}
-                <td className='font-[400] flex justify-center items-center h-[8vh]'>
-                  <img src={phone} alt='' className='h-[3vh] mr-[5%]' /> iphone
-                  XR
-                </td>
-                <td className='font-[400]'>₦160,000</td>
-                <td className='font-[400]'>₦160,000</td>
-                <td className='font-[400]'>Abiola Jimoh</td>
-                <td className='font-[400]'>08130601026</td>
-                <td className='font-[400]'>
-                  October 24th 2022, 4:18:32 am
-                </td>{" "}
-              </tr>{" "}
-              <tr className='bg-[#1100770A] text-[0.8rem] text-[#56555B] text-center w-[100%] '>
-                <td className='font-[400] py-[1%]'>#24567</td>{" "}
-                <td className='font-[400] flex justify-center items-center h-[8vh]'>
-                  <img src={phone} alt='' className='h-[3vh] mr-[5%]' /> iphone
-                  XR
-                </td>
-                <td className='font-[400]'>₦160,000</td>
-                <td className='font-[400]'>₦160,000</td>
-                <td className='font-[400]'>Abiola Jimoh</td>
-                <td className='font-[400]'>08130601026</td>
-                <td className='font-[400]'>
-                  October 24th 2022, 4:18:32 am
-                </td>{" "}
-              </tr>
-            </tbody> */}
           </table>
         </div>
+        <Pagination
+          currentPage={currentPage}
+          totalPages={Math.ceil(orders.length / ordersPerPage)}
+          onPageChange={handlePageChange}
+        />
       </div>
 
       {showModal ? <WithdrawModal func={toggleModal} /> : null}

@@ -122,7 +122,7 @@ export const getMerchant = createAsyncThunk(
     try {
       dispatch(fetchDataStart);
       const response = await apiGet(`/merchants/${id}`);
-
+      console.log(response);
       dispatch(fetchDataUser(response.data.data));
     } catch (error: any) {
       console.log(error.response.data.error);
@@ -143,7 +143,7 @@ export const fetchOrderData = createAsyncThunk(
         `/checkouts/order?merchantId=${merchantId}`
       );
 
-      // console.log(response.data.data);
+      console.log(response.data.data);
       // toast.success("Order data fetched successfully");
       dispatch(fetchDataSuccess(response.data.data));
     } catch (error: any) {
@@ -191,13 +191,13 @@ export const createProducts = createAsyncThunk(
 /**==============Get Products======= **/
 export const getProducts = createAsyncThunk(
   "getProducts",
-  async (id: string, { dispatch }) => {
+  async ({ id }: { id: string }, { dispatch }) => {
     try {
-      dispatch(fetchDataStart);
+      dispatch(fetchDataStart());
       const response = await apiGet(
-        `/products?merchantId=${id}&page=1&size=10`
+        `/products?merchantId=${id}&page=1&size=22`
       );
-
+      console.log(response.data);
       dispatch(fetchProduct(response.data.data));
     } catch (error: any) {
       console.log(error.response.data.error);
