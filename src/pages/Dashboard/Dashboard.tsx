@@ -1,6 +1,6 @@
 import Sidebar from "./Sidebar";
 import { Routes, Route } from "react-router-dom";
-import DashboardHome, { DashNav } from "./DashboardHome";
+import DashboardHome from "./DashboardHome";
 import DashboardProduct from "./DashboardProduct";
 import DashboardAddProduct from "./DashboardAddProduct";
 import SalesInfo from "./SalesInfo";
@@ -8,10 +8,11 @@ import Profile from "./Profile";
 import UserReport from "./UserReport";
 import Settings from "./Settings";
 import SingleProduct from "./SingleProduct";
+import { DashNav } from "../../components/dash-nav";
 
 const Dashboard = () => {
   return (
-    <div>
+    <div className=''>
       <Sidebar />
       <div
         className={`${

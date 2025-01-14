@@ -22,6 +22,7 @@ import {
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
+import { ErrorPayload } from "vite/types/hmrPayload";
 
 // export const registerUser = createAsyncThunk(
 //   "registerUser",
@@ -179,9 +180,10 @@ export const createProducts = createAsyncThunk(
       dispatch(fetchDataStart);
       const response = await FormDataPost(`/products`, formData);
       dispatch(fetchProduct(response.data.data));
-      toast.success(response.data.message);
+      console.log(response.data.message);
+      // toast.success(response.data.message);
     } catch (error: any) {
-      console.log(error.response.data.error);
+      console.log(error.response.data.Error);
       toast.error(error.response.data.Error);
       dispatch(fetchDataFailure(error.response.data.error));
     }
@@ -189,23 +191,37 @@ export const createProducts = createAsyncThunk(
 );
 
 /**==============Get Products======= **/
-export const getProducts = createAsyncThunk(
-  "getProducts",
-  async ({ id }: { id: string }, { dispatch }) => {
+export const getProducts = createAsyncThunk<void, { id: string }>(
+  "product/getProducts",
+  async ({ id }, { dispatch }) => {
     try {
       dispatch(fetchDataStart());
       const response = await apiGet(
-        `/products?merchantId=${id}&page=1&size=22`
+        `/products?merchantId=${id}&page=1&size=25`
       );
-      console.log(response.data);
       dispatch(fetchProduct(response.data.data));
+      console.log(response.data.data);
     } catch (error: any) {
-      console.log(error.response.data.error);
-      toast.error(error.response.data.Error);
-      dispatch(fetchDataFailure(error.response.data.error));
+      console.log(error.response.error);
+      toast.error(error.response.error || "Failed to fetch products");
+      dispatch(
+        fetchDataFailure(error.response?.data?.error || "Unknown error")
+      );
     }
   }
 );
+export const getProductById = (id: string) => async (dispatch: any) => {
+  dispatch(fetchDataStart());
+  try {
+    const response = await axios.get(`/products/${id}`);
+    dispatch(fetchDataSuccess(response.data));
+    return response.data;
+  } catch (error: any) {
+    console.error("Error fetching product:", error);
+    dispatch(fetchDataFailure(error.message || "Failed to fetch product"));
+    throw error;
+  }
+};
 
 /**============== Update Products======= **/
 export const updateProduct = createAsyncThunk(
@@ -214,11 +230,9 @@ export const updateProduct = createAsyncThunk(
     try {
       dispatch(fetchDataStart);
       const response = await formDataPut(`/products/${id}`, formData);
-      toast.success(response.data.message);
-      // window.location.reload()
     } catch (error: any) {
       console.log(error.response.data.error);
-      toast.error(error.response.data.Error);
+      // toast.error(error.response.data.Error);
       dispatch(fetchDataFailure(error.response.data.error));
     }
   }

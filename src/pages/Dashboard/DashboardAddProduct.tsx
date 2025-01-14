@@ -1,306 +1,4 @@
-import shoes from "../../assets/shoe1.jpeg";
-import drag1 from "../../assets/dragndrop1.png";
-import drag2 from "../../assets/dragndrop2.png";
-import mac from "../../assets/mac1.jpeg";
-import { categories } from "../../data/categories";
-import { Link, useLocation, useParams } from "react-router-dom";
-import { useEffect, useRef, useState } from "react";
-import {
-  createProducts,
-  getCategories,
-  updateProduct,
-} from "../../redux/actions";
-import { useDispatch, useSelector } from "react-redux";
-
-const DashboardAddProduct = () => {
-  const id = localStorage.getItem("merchantId");
-
-  const [formData, setFormData] = useState<any>({
-    title: "",
-    category: "",
-    coverImage: "",
-    description: "",
-    isAvailable: true,
-    subCategory: "",
-    specifications: [],
-    price: 0,
-    merchantId: id,
-    categoryId: "",
-  });
-
-  const [updateData, setupdateData] = useState<any>({
-    title: "",
-    category: "",
-    coverImage: "",
-    description: "",
-    isAvailable: true,
-    subCategory: "",
-    specifications: [],
-    price: 0,
-    categoryId: "",
-  });
-
-  const categories = useSelector((state: any) => state.categories);
-
-  console.log("cat", categories);
-
-  const subCategories = categories.find(
-    (item: any) => item.name == formData.category
-  );
-
-  const [desc, setDesc] = useState("");
-
-  const [images, setImages] = useState<any>(null);
-
-  const imageRef = useRef<any>(null);
-
-  const handleRef = () => {
-    imageRef.current.click();
-  };
-
-  const [chips, setChips] = useState<string[]>([]);
-
-  const dispatch = useDispatch() as unknown as any;
-
-  const handleDeleteChip = (index: number) => {
-    const newChips = [...chips];
-    newChips.splice(index, 1);
-    setChips(newChips);
-  };
-
-  const onDescription = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    const { value } = e.currentTarget;
-    setDesc(value);
-  };
-
-  const onEnterDescription = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    const { name, value } = e.currentTarget;
-
-    if (["Enter", "Tab", ","].includes(e.key)) {
-      e.preventDefault();
-      setFormData({
-        ...formData,
-        specifications: JSON.stringify([...chips, value]), // Use the current chips state directly
-      });
-
-      setupdateData({
-        ...updateData,
-        specifications: JSON.stringify([...chips, value]), // Use the current chips state directly
-      });
-
-      setChips([...chips, value]); // Update the chips state with the new value
-
-      setDesc("");
-
-      setDesc("");
-
-      console.log(formData);
-    }
-  };
-
-  const handleChange = (e: any) => {
-    e.preventDefault();
-    const { name, value } = e.currentTarget;
-
-    if (name === "coverImage") {
-      console.log(e.target.files[0]);
-      setImages(URL.createObjectURL(e.target.files[0]));
-      setFormData({
-        ...formData,
-        [name]: e.target.files[0],
-      });
-
-      setupdateData({
-        ...updateData,
-        [name]: e.target.files[0],
-      });
-    } else {
-      console.log(name, value);
-      setFormData({
-        ...formData,
-        [name]: value,
-      });
-
-      setupdateData({
-        ...updateData,
-        [name]: value,
-      });
-    }
-  };
-
-  useEffect(() => {
-    dispatch(getCategories());
-    setFormData({ ...formData, categoryId: subCategories?._id });
-    setupdateData({ ...updateData, categoryId: subCategories?._id });
-  }, []);
-
-  console.log(formData);
-
-  const handleSubmit = async (e: any) => {
-    e.preventDefault();
-    await dispatch(createProducts(formData));
-  };
-
-  const updateSubmit = async (e: any) => {
-    e.preventDefault();
-    await dispatch(updateProduct({ id: productId, formData: updateData }));
-  };
-
-  const { productId } = useParams();
-
-  return (
-    <div
-      className={`${
-        window.innerWidth > 768 ? `ml-[15%]` : `ml-[10%]`
-      } mr-[5%] bg-[#1100770A] min-h-[100vh] `}
-    >
-      <div className='mx-[3%]'>
-        <div className='py-[1%]'>
-          <p className='text-[0.7rem]'>Dashboard/Product</p>
-          <h3 className='text-[1.3rem] font-[500]'>
-            {productId ? ` Update Product` : `Add Product`}
-          </h3>
-        </div>
-
-        <form
-          className='flex lg:flex-row flex-col justify-between'
-          onSubmit={productId ? updateSubmit : handleSubmit}
-        >
-          <div className='bg-[#fff] lg:w-[40%] px-[3%] py-[2%] rounded-md '>
-            <TextInput
-              label='Product Name'
-              placeholder='Product Name'
-              type='text'
-              name='title'
-              value={formData.title}
-              onChange={handleChange}
-              error='Do not exceed 20 character when entering product name.'
-            />
-            <div className='flex justify-between w-[100%] '>
-              <SelectInput
-                label='Category'
-                name='category'
-                data={categories}
-                width={`w-[100%]`}
-                onChange={handleChange}
-              />
-              {/* <SelectInput
-                label="Gender"
-                data={["Male", "Female"]}
-                width={`w-[40%]`}
-              /> */}
-            </div>
-            <SelectInput
-              label='Brand'
-              name='subCategory'
-              data={subCategories?.subCategories}
-              onChange={handleChange}
-            />
-            <TextInput
-              label='Description'
-              name='description'
-              value={formData?.description}
-              onChange={handleChange}
-            />
-            <TextAreaInput
-              label='Specifications'
-              name='specifications'
-              value={desc}
-              chips={chips}
-              del={handleDeleteChip}
-              onChange={onDescription}
-              onKeyPress={onEnterDescription}
-              error='Do not exceed 20 character when entering product description. '
-            />
-          </div>
-          <div className='bg-[#fff] lg:w-[50%] px-[3%] py-[2%] rounded-md '>
-            <div>
-              <h3 className='text-[#110077]'>Product Images</h3>
-              <div className='flex justify-between'>
-                <img
-                  src={images || shoes}
-                  alt=''
-                  className='h-[20vh] border border-dashed border-[#8C858D] rounded-md w-[55%]'
-                  onClick={handleRef}
-                />
-                <input
-                  type='file'
-                  name='coverImage'
-                  className='hidden'
-                  ref={imageRef}
-                  onChange={handleChange}
-                />
-
-                {/* <img src={drag1} alt="" className="h-[20vh] " />
-
-                <div className="flex flex-col justify-between ">
-                  <img src={drag2} alt="" className="h-[9.5vh]" />
-                  <img src={drag2} alt="" className="h-[9.5vh]" />
-                </div> */}
-              </div>
-              {/* <p className="text-[0.7rem] text-[#8C858D] my-[1%]">
-                You need to add at least 4 images, pay attention to the quality
-                of pictures you add. Ensure the product shows all details.
-              </p> */}
-            </div>
-            {/* <div className="flex justify-between items-center">
-              <div className="w-[40%]">
-                <SelectInput
-                  label="Add Size"
-                  width={`w-[100%]`}
-                  value={`EU-44`}
-                />
-              </div>
-              <TextInput label="Stock" placeholder={`24`} />
-            </div> */}
-            <div>
-              <TextInput
-                label='Price'
-                name='price'
-                value={formData.price}
-                placeholder={`₦35,000`}
-                onChange={handleChange}
-                width={`w-[100%]`}
-              />
-              {/* <SelectInput
-                label="Product Date"
-                width={`w-[50%]`}
-                value={`Today (March 18, 2022)`}
-              /> */}
-            </div>
-
-            <div className='flex justify-center my-[8%]'>
-              {productId ? (
-                <button
-                  type='submit'
-                  className='bg-[#533AE9] w-[40%] h-[5vh] text-[#fff] mr-[5%] rounded-md flex justify-center items-center'
-                >
-                  Update Product
-                </button>
-              ) : (
-                <button
-                  type='submit'
-                  className='bg-[#533AE9] w-[50%] h-[5vh] text-[#fff] mr-[5%] rounded-md flex justify-center items-center t'
-                >
-                  Add Product
-                </button>
-              )}
-              <Link
-                to='/dashboard/product'
-                className='bg-[#FAFAFA] w-[50%] h-[5vh] text-[#533AE9] mr-[5%] rounded-md flex justify-center items-center'
-              >
-                Cancel
-              </Link>
-            </div>
-          </div>
-        </form>
-      </div>
-    </div>
-  );
-};
-
-export default DashboardAddProduct;
-
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export const TextInput = ({
   label,
   placeholder,
@@ -344,7 +42,7 @@ export const SelectInput = ({
   error,
   readonly,
 }: any) => {
-  const location = useLocation();
+  // const location = useLocation();
   return (
     <div className={`flex flex-col ${width} py-[2%]`}>
       <label htmlFor={label} className='text-[0.9rem] text-[#110077] '>
@@ -398,11 +96,6 @@ export const TextAreaInput = ({
       <div
         className={`flex flex-col ${width} py-[2%] border border-[#11007766] rounded-md`}
       >
-        <div className='flex flex-wrap '>
-          {chips?.map((chip: string, index: number) => (
-            <Chip key={index} text={chip} onDelete={() => del(index)} />
-          ))}
-        </div>
         {label === "Specifications" ? (
           <input
             className=' px-[2%] outline-none w-[100%]'
@@ -425,21 +118,462 @@ export const TextAreaInput = ({
   );
 };
 
-const Chip = ({ text, onDelete }: any) => {
-  const location = useLocation();
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { ImagePlus, MoveLeft } from "lucide-react";
+import { Button } from "../../components/ui/button";
+import { Card, CardContent } from "../../components/ui/card";
+import { Input } from "../../components/ui/input";
+import { Label } from "../../components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../../components/ui/select";
+import { Textarea } from "../../components/ui/textarea";
+import { Badge } from "../../components/ui/badge";
+import {
+  createProducts,
+  getCategories,
+  updateProduct,
+  getProducts,
+} from "../../redux/actions";
+import ErrorBoundary from "../../components/ErrorBoundary";
+import { toast } from "react-toastify";
+
+interface Category {
+  _id: string;
+  name: string;
+  description: string;
+  coverImage: string;
+  subCategories: string[];
+  featuredCategories: boolean;
+  totalMerchants: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export default function AddProductPage() {
   return (
-    <div className='chip bg-[#fff] border border-[#ccc] w-[auto] flex justify-between items-center py-[2%] px-[3%] rounded-md mx-[2%] my-[2%]'>
-      <span className='chip-text'>{text}</span>
-      {location.pathname === "/dashboard/add-product" ? (
-        <button
-          className='h-[2px] w-[2px] flex justify-center items-center ml-[5%] bg-[#fff]'
-          onClick={onDelete}
-        >
-          &times;
-        </button>
-      ) : (
-        ""
-      )}
+    <ErrorBoundary>
+      <AddProduct />
+    </ErrorBoundary>
+  );
+}
+
+function AddProduct() {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { productId } = useParams();
+  const id = localStorage.getItem("merchantId") as string;
+  const [imagePreview, setImagePreview] = useState<string>("");
+  const [specifications, setSpecifications] = useState<string[]>([]);
+  const [specInput, setSpecInput] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+
+  const [formData, setFormData] = useState({
+    title: "",
+    category: "",
+    subCategory: "",
+    description: "",
+    price: "",
+    coverImage: null as File | null,
+    specifications: [] as string[],
+    isAvailable: true,
+    merchantId: localStorage.getItem("merchantId"),
+    categoryId: "",
+  });
+  console.log(formData);
+
+  const [errors, setErrors] = useState({
+    title: "",
+    category: "",
+    subCategory: "",
+    description: "",
+    price: "",
+    coverImage: "",
+  });
+
+  const categories = useSelector(
+    (state: any) => state.categories
+  ) as Category[];
+
+  const products = useSelector((state: any) => state.product);
+
+  const selectedCategory = categories.find(
+    (cat: Category) => cat.name === formData.category
+  );
+
+  const handleCategorySelect = (categoryName: string) => {
+    const selectedCategory = categories.find(
+      (cat: Category) => cat.name === categoryName
+    );
+    setFormData((prev) => ({
+      ...prev,
+      category: categoryName,
+      categoryId: selectedCategory?._id || "",
+      subCategory: "",
+    }));
+  };
+
+  useEffect(() => {
+    dispatch(getCategories() as any);
+    dispatch(getProducts({ id }) as any);
+  }, [dispatch, id]);
+
+  useEffect(() => {
+    if (productId) {
+      const product = products.find((p: any) => p._id === productId); // Filter the product by ID
+      if (product) {
+        setFormData({
+          ...product,
+          specifications: product.specifications || [],
+        });
+        setImagePreview(product.coverImageUrl || "");
+      }
+    }
+  }, [productId, products]);
+
+  const handleSpecificationKeyDown = (
+    e: React.KeyboardEvent<HTMLTextAreaElement>
+  ) => {
+    if (["Enter", "Tab", ","].includes(e.key)) {
+      e.preventDefault();
+      if (specInput.trim()) {
+        const newSpec = specInput.trim();
+        setSpecifications((prev) => [...prev, newSpec]);
+        setFormData((prev) => ({
+          ...prev,
+          specifications: [...prev.specifications, newSpec],
+        }));
+        setSpecInput("");
+      }
+    }
+  };
+
+  const removeSpecification = (index: number) => {
+    setSpecifications((prev) => prev.filter((_, i) => i !== index));
+    setFormData((prev) => ({
+      ...prev,
+      specifications: prev.specifications.filter((_, i) => i !== index),
+    }));
+  };
+
+  const validateForm = () => {
+    const newErrors = {
+      title: formData.title ? "" : "Product name is required",
+      category: formData.category ? "" : "Category is required",
+      subCategory: formData.subCategory ? "" : "Brand is required",
+      description: formData.description ? "" : "Description is required",
+      price: formData.price ? "" : "Price is required",
+      coverImage: formData.coverImage ? "" : "Product image is required",
+    };
+
+    setErrors(newErrors);
+
+    return Object.values(newErrors).every((error) => error === "");
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsButtonDisabled(true);
+    setError(null);
+
+    if (!validateForm()) {
+      setIsButtonDisabled(false);
+      return;
+    }
+    try {
+      const submitData = new FormData();
+      submitData.append("title", formData.title);
+      submitData.append("category", formData.category);
+      submitData.append("subCategory", formData.subCategory);
+      submitData.append("description", formData.description);
+      submitData.append("price", formData.price);
+      submitData.append("isAvailable", String(formData.isAvailable));
+      // submitData.append("merchantId", formData.merchantId || "");
+      submitData.append("categoryId", formData.categoryId);
+      submitData.append(
+        "specifications",
+        JSON.stringify(formData.specifications)
+      );
+
+      if (formData.coverImage) {
+        submitData.append("coverImage", formData.coverImage);
+      }
+
+      if (productId) {
+        await dispatch(
+          updateProduct({ id: productId, formData: submitData }) as any
+        );
+      } else {
+        submitData.append("merchantId", formData.merchantId || "");
+        await dispatch(createProducts(submitData) as any);
+
+        console.log(submitData);
+      }
+      toast.success(
+        `Product ${productId ? "updated" : "created"} successfully`
+      );
+      navigate("/dashboard/product");
+    } catch (error: any) {
+      setIsButtonDisabled(false);
+      toast.error(error.message);
+      console.error("Error submitting form:", error);
+      setError(error.message || "An error occurred while submitting the form");
+    }
+  };
+
+  return (
+    <div
+      className={`bg-white ${
+        window.innerWidth > 768 ? `ml-[15%]` : `ml-[8%]`
+      } mr-[5%] bg-[#1100770A] min-h-[100vh]`}
+    >
+      <div className='min-h-screen bg-background px-4 sm:px-6'>
+        <div className='py-6'>
+          <div className='mb-6'>
+            <div className='flex items-center gap-4'>
+              <MoveLeft size={32} onClick={() => navigate(-1)} className='' />
+
+              <div>
+                <p className='text-sm text-muted-foreground'>
+                  Dashboard/Product/{productId ? "Update" : "Add"}
+                </p>
+                <h3 className='text-2xl font-medium'>
+                  {productId ? "Update Product" : "Add Product"}
+                </h3>
+              </div>
+            </div>
+          </div>
+
+          {error && (
+            <div className='mb-4 p-4 bg-red-50 border border-red-200 text-red-600 rounded-md'>
+              {error}
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit} className='grid gap-6 md:grid-cols-2'>
+            <Card>
+              <CardContent className='pt-6 space-y-4'>
+                <div className='space-y-2'>
+                  <Label htmlFor='title'>Product Name</Label>
+                  <Input
+                    id='title'
+                    name='title'
+                    value={formData.title}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        title: e.target.value,
+                      }))
+                    }
+                    placeholder='Enter product name'
+                    required
+                  />
+                  {errors.title && (
+                    <div className='text-red-600 text-sm'>{errors.title}</div>
+                  )}
+                </div>
+
+                <div className='space-y-2'>
+                  <Label htmlFor='category'>Category</Label>
+                  <Select
+                    value={formData.category}
+                    // onValueChange={(value) =>
+                    //   setFormData((prev) => ({ ...prev, category: value }))
+                    // }
+                    onValueChange={handleCategorySelect}
+                    required
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder='Select category' />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {categories.map((category) => (
+                        <SelectItem key={category._id} value={category.name}>
+                          {category.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  {errors.category && (
+                    <div className='text-red-600 text-sm'>
+                      {errors.category}
+                    </div>
+                  )}
+                </div>
+
+                <div className='space-y-2'>
+                  <Label htmlFor='subCategory'>Brand</Label>
+                  <Select
+                    value={formData.subCategory}
+                    onValueChange={(value) =>
+                      setFormData((prev) => ({ ...prev, subCategory: value }))
+                    }
+                    required
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder='Select brand' />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {selectedCategory?.subCategories?.map((sub) => (
+                        <SelectItem key={sub} value={sub}>
+                          {sub}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  {errors.subCategory && (
+                    <div className='text-red-600 text-sm'>
+                      {errors.subCategory}
+                    </div>
+                  )}
+                </div>
+
+                <div className='space-y-2'>
+                  <Label htmlFor='description'>Description</Label>
+                  <Textarea
+                    id='description'
+                    value={formData.description}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        description: e.target.value,
+                      }))
+                    }
+                    placeholder='Enter product description'
+                    required
+                  />
+                  {errors.description && (
+                    <div className='text-red-600 text-sm'>
+                      {errors.description}
+                    </div>
+                  )}
+                </div>
+
+                <div className='space-y-2'>
+                  <Label htmlFor='specifications'>Specifications</Label>
+                  <Textarea
+                    id='specifications'
+                    value={specInput}
+                    onChange={(e) => setSpecInput(e.target.value)}
+                    onKeyDown={handleSpecificationKeyDown}
+                    placeholder='Enter specifications and press Enter'
+                  />
+                  <div className='flex flex-wrap gap-2 mt-2'>
+                    {specifications.map((spec, index) => (
+                      <Badge
+                        key={index}
+                        variant='secondary'
+                        className='cursor-pointer border border-white bg-blue-600 text-white'
+                        onClick={() => removeSpecification(index)}
+                      >
+                        {spec} ×
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardContent className='pt-6 space-y-4'>
+                <div className='space-y-2'>
+                  <Label>Product Image</Label>
+                  <div
+                    className='border-2 border-dashed rounded-lg p-4 hover:bg-muted/50 cursor-pointer transition-colors'
+                    onClick={() =>
+                      document.getElementById("image-upload")?.click()
+                    }
+                  >
+                    {imagePreview ? (
+                      <img
+                        src={imagePreview}
+                        alt='Preview'
+                        className='w-full aspect-video object-cover rounded-lg'
+                      />
+                    ) : (
+                      <div className='flex flex-col items-center justify-center py-4'>
+                        <ImagePlus className='h-8 w-8 text-muted-foreground mb-2' />
+                        <p className='text-sm text-muted-foreground'>
+                          Click to upload product image
+                        </p>
+                      </div>
+                    )}
+                    <input
+                      id='image-upload'
+                      type='file'
+                      accept='image/*'
+                      className='hidden'
+                      onChange={(e) => {
+                        if (e.target.files && e.target.files[0]) {
+                          const reader = new FileReader();
+                          reader.onload = (e) =>
+                            setImagePreview(e.target?.result as string);
+                          reader.readAsDataURL(e.target.files[0]);
+                          setFormData((prev) => ({
+                            ...prev,
+                            coverImage: e.target.files[0],
+                          }));
+                        }
+                      }}
+                      required
+                    />
+                  </div>
+                  {errors.coverImage && (
+                    <div className='text-red-600 text-sm'>
+                      {errors.coverImage}
+                    </div>
+                  )}
+                </div>
+
+                <div className='space-y-2'>
+                  <Label htmlFor='price'>Price</Label>
+                  <Input
+                    id='price'
+                    type='number'
+                    value={formData.price}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        price: e.target.value,
+                      }))
+                    }
+                    placeholder='Enter price'
+                    required
+                  />
+                  {errors.price && (
+                    <div className='text-red-600 text-sm'>{errors.price}</div>
+                  )}
+                </div>
+
+                <div className='flex gap-4 pt-4'>
+                  <Button
+                    type='submit'
+                    className='flex-1 bg-blue-600 text-white'
+                    disabled={isButtonDisabled}
+                  >
+                    {productId ? "Update Product" : "Add Product"}
+                  </Button>
+                  <Button
+                    type='button'
+                    variant='outline'
+                    className='flex-1'
+                    onClick={() => navigate("/dashboard/product")}
+                  >
+                    Cancel
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </form>
+        </div>
+      </div>
     </div>
   );
-};
+}

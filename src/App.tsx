@@ -1,4 +1,12 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable react-refresh/only-export-components */
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  BrowserRouter,
+} from "react-router-dom";
 import "./App.css";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import Login from "./pages/Login";
@@ -11,9 +19,14 @@ import { ProtectRoute } from "./pages/ProtectedRoute";
 import { lazy, Suspense, useEffect } from "react";
 import { Circles } from "react-loader-spinner";
 import Loader from "./components/Loader";
+
 const LazyDashboard = lazy(() => import("./pages/Dashboard/Dashboard"));
+const LazyAddProduct = lazy(
+  () => import("./pages/Dashboard/DashboardAddProduct")
+);
 const LazyLogin = lazy(() => import("./pages/Login"));
 const LazyRegister = lazy(() => import("./pages/Register"));
+const LazyViewProduct = lazy(() => import("./pages/Dashboard/SingleProduct"));
 
 export const store = configureStore({
   reducer: reducer,
@@ -24,26 +37,28 @@ function App() {
   const loading = useSelector((state: any) => state.loading);
 
   return (
-    <>
+    <BrowserRouter>
       <Suspense fallback={<Loader />}>
         <ToastContainer />
-        <Router>
-          <Routes>
-            <Route path='/' element={<LazyLogin />} />
-            <Route path='/login' element={<LazyLogin />} />
-            <Route path='/register' element={<LazyRegister />} />
-            <Route
-              path='/dashboard/*'
-              element={
-                <ProtectRoute>
-                  <LazyDashboard />
-                </ProtectRoute>
-              }
-            />
-          </Routes>
-        </Router>
+
+        <Routes>
+          <Route path='/' element={<LazyLogin />} />
+          <Route path='/login' element={<LazyLogin />} />
+          <Route path='/register' element={<LazyRegister />} />
+          <Route
+            path='/dashboard/*'
+            element={
+              <ProtectRoute>
+                <LazyDashboard />
+              </ProtectRoute>
+            }
+          >
+            <Route path='product/:id' element={<LazyViewProduct />} />
+            <Route path='product/add-product' element={<LazyAddProduct />} />
+          </Route>
+        </Routes>
       </Suspense>
-    </>
+    </BrowserRouter>
   );
 }
 

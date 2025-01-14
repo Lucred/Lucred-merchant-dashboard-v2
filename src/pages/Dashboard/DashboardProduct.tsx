@@ -1,116 +1,275 @@
+"use client";
+
 import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import Pagination from "../../components/Pagination";
+import { Eye, Pencil, Search, Trash2, Plus } from "lucide-react";
+
+import { Button } from "../../components/ui/button";
+import { Input } from "../../components/ui/input";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "../../components/ui/table";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "../../components/ui/alert-dialog";
+import { Skeleton } from "../../components/ui/skeleton";
 import { getProducts, deleteProduct } from "../../redux/actions";
+import Pagination from "../../components/Pagination";
+import { numberWithCommas } from "../../utils";
 
 const DashboardProduct = () => {
   const dispatch = useDispatch() as unknown as any;
   const id = localStorage.getItem("merchantId") as string;
+  const [isLoading, setIsLoading] = useState(true);
+  const [productToDelete, setProductToDelete] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const products = useSelector((state: any) => state.product);
+
+  const productArray = useMemo(() => {
+    return Array.isArray(products) ? products : [];
+  }, [products]);
+
+  // Filter products based on search query
+  const filteredProducts = useMemo(() => {
+    return productArray.filter((product: any) => {
+      const searchString = searchQuery.toLowerCase();
+      return (
+        product.title?.toLowerCase().includes(searchString) ||
+        product.category?.toLowerCase().includes(searchString) ||
+        product.subCategory?.toLowerCase().includes(searchString) ||
+        product.description?.toLowerCase().includes(searchString)
+      );
+    });
+  }, [productArray, searchQuery]);
+
   const [currentPage, setCurrentPage] = useState(1);
   const productsPerPage = 10;
 
+  // Use filtered products for pagination
   const currentProduct = useMemo(() => {
     const indexOfLastProduct = currentPage * productsPerPage;
     const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
-    return products.slice(indexOfFirstProduct, indexOfLastProduct);
-  }, [products, currentPage]);
+    return filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct);
+  }, [filteredProducts, currentPage]);
+
+  // Reset to first page when search query changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery]);
 
   const handlePageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber);
   };
 
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (productToDelete) {
+      await dispatch(deleteProduct(productToDelete));
+      setProductToDelete(null);
+    }
+  };
+
   useEffect(() => {
-    dispatch(getProducts({ id }));
+    const fetchProducts = async () => {
+      setIsLoading(true);
+      await dispatch(getProducts({ id }));
+      setIsLoading(false);
+    };
+    fetchProducts();
   }, [dispatch, id]);
 
   return (
     <div
-      className={`${
+      className={` bg-white ${
         window.innerWidth > 768 ? `ml-[15%]` : `ml-[8%]`
       } mr-[5%] bg-[#1100770A] min-h-[100vh]`}
     >
-      <div className='mx-[3%]'>
-        <div className='py-[1%]'>
-          <p className='text-[0.7rem]'>Dashboard/Product</p>
-          <h3 className='text-[1.3rem] font-[500]'>Product</h3>
-        </div>
-        <div className='bg-[#fff] py-[2%] px-[1%]'>
-          <div className='flex items-center justify-between'>
-            <div className='lg:w-[25%] w-[50%] bg-[#FFFFFF] flex items-center justify-center h-[5vh] border border-[#C3C3C4] rounded-md'>
-              <input
-                type='text'
-                placeholder='Search'
-                className='border-none h-[5vh] text-[#707070] outline-none bg-[transparent]'
+      <div className='min-h-screen bg-background px-4 sm:px-6'>
+        <div className='py-6'>
+          <div className='mb-6'>
+            <p className='text-sm text-muted-foreground'>Dashboard/Product</p>
+            <h3 className='text-2xl font-medium'>Product</h3>
+          </div>
+
+          <div className='rounded-lg border bg-card p-6'>
+            <div className='flex flex-col sm:flex-row justify-between gap-4 mb-6'>
+              <div className='relative w-full sm:w-72'>
+                <Search className='absolute left-2 top-2.5 h-4 w-4 text-muted-foreground ' />
+                <Input
+                  placeholder='Search products...'
+                  className='pl-8 bg-white'
+                  value={searchQuery}
+                  onChange={handleSearchChange}
+                />
+              </div>
+              <Button
+                asChild
+                className='w-full sm:w-auto bg-blue-600 text-white'
+              >
+                <Link to='/dashboard/add-product'>
+                  <Plus className='mr-2 h-4 w-4' />
+                  Add Product
+                </Link>
+              </Button>
+            </div>
+
+            <div className='relative overflow-x-auto'>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Product</TableHead>
+                    <TableHead>Title</TableHead>
+                    <TableHead>Subcategory</TableHead>
+                    <TableHead>Category</TableHead>
+                    <TableHead>Description</TableHead>
+                    <TableHead>Stock</TableHead>
+                    <TableHead>Price</TableHead>
+                    <TableHead className='text-right'>Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {isLoading
+                    ? Array.from({ length: 5 }).map((_, index) => (
+                        <TableRow key={`loading-${index}`}>
+                          <TableCell>
+                            <Skeleton className='h-12 w-12' />
+                          </TableCell>
+                          <TableCell>
+                            <Skeleton className='h-4 w-[200px]' />
+                          </TableCell>
+                          <TableCell>
+                            <Skeleton className='h-4 w-[100px]' />
+                          </TableCell>
+                          <TableCell>
+                            <Skeleton className='h-4 w-[100px]' />
+                          </TableCell>
+                          <TableCell>
+                            <Skeleton className='h-4 w-[300px]' />
+                          </TableCell>
+                          <TableCell>
+                            <Skeleton className='h-4 w-[50px]' />
+                          </TableCell>
+                          <TableCell>
+                            <Skeleton className='h-4 w-[80px]' />
+                          </TableCell>
+                          <TableCell>
+                            <Skeleton className='h-8 w-[100px]' />
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    : currentProduct?.map((elem: any, id: number) => (
+                        <TableRow key={id}>
+                          <TableCell>
+                            <img
+                              src={elem.coverImage}
+                              alt={elem.title}
+                              className='h-12 w-12 object-cover rounded'
+                            />
+                          </TableCell>
+                          <TableCell className='font-medium'>
+                            {elem.title}
+                          </TableCell>
+                          <TableCell>{elem.subCategory}</TableCell>
+                          <TableCell>{elem.category}</TableCell>
+                          <TableCell className='max-w-[300px] truncate'>
+                            {elem.description}
+                          </TableCell>
+                          <TableCell>100</TableCell>
+                          <TableCell>₦{numberWithCommas(elem.price)}</TableCell>
+                          <TableCell>
+                            <div className='flex justify-end items-center gap-2'>
+                              <Button
+                                variant='ghost'
+                                size='icon'
+                                asChild
+                                className='h-8 w-8'
+                              >
+                                <Link to={`/dashboard/product/${elem._id}`}>
+                                  <Eye className='h-4 w-4' />
+                                </Link>
+                              </Button>
+                              <Button
+                                variant='ghost'
+                                size='icon'
+                                asChild
+                                className='h-8 w-8'
+                              >
+                                <Link
+                                  to={`/dashboard/update-product/${elem._id}`}
+                                >
+                                  <Pencil className='h-4 w-4' />
+                                </Link>
+                              </Button>
+                              <AlertDialog>
+                                <AlertDialogTrigger asChild>
+                                  <Trash2
+                                    onClick={() => setProductToDelete(elem._id)}
+                                    color='red'
+                                    className='h-4 w-4 cursor-pointer'
+                                  />
+                                </AlertDialogTrigger>
+                                <AlertDialogContent className='bg-white'>
+                                  <AlertDialogHeader>
+                                    <AlertDialogTitle>
+                                      Delete Product
+                                    </AlertDialogTitle>
+                                    <AlertDialogDescription>
+                                      Are you sure you want to delete this
+                                      product? This action cannot be undone.
+                                    </AlertDialogDescription>
+                                  </AlertDialogHeader>
+                                  <AlertDialogFooter>
+                                    <AlertDialogCancel
+                                      onClick={() => setProductToDelete(null)}
+                                    >
+                                      Cancel
+                                    </AlertDialogCancel>
+                                    <AlertDialogAction
+                                      className='bg-red-600 text-white hover:bg-red-700'
+                                      onClick={handleDeleteConfirm}
+                                    >
+                                      Delete
+                                    </AlertDialogAction>
+                                  </AlertDialogFooter>
+                                </AlertDialogContent>
+                              </AlertDialog>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                </TableBody>
+              </Table>
+            </div>
+
+            <div className='mt-4 flex justify-center'>
+              <Pagination
+                currentPage={currentPage}
+                totalPages={Math.ceil(
+                  filteredProducts.length / productsPerPage
+                )}
+                onPageChange={handlePageChange}
               />
             </div>
-            <Link
-              to='/dashboard/add-product'
-              className='bg-[#533AE9] lg:w-[20%] w-[40%] h-[5vh] text-[#fff] lg:mr-[5%] rounded-md flex justify-center items-center'
-            >
-              Add Product
-            </Link>
-          </div>
-          <div className='w-[100%] overflow-scroll scrollbar-none'>
-            <table className='w-[250%] lg:w-[100%] rounded-md my-[2%]'>
-              <thead>
-                <tr className='bg-[#1100770A] text-[0.8rem] text-[#171515] font-[700] w-[100%] px-[5%]'>
-                  <th className='font-[500] py-[1%]'>Product</th>
-                  <th className='font-[500]'>Title</th>
-                  <th className='font-[500]'>Subcategory</th>
-                  <th className='font-[500]'>Category</th>
-                  <th className='font-[500]'>Description</th>
-                  <th className='font-[500]'>Stock</th>
-                  <th className='font-[500]'>Price</th>
-                  <th className='font-[500]'>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {currentProduct?.map((elem: any, id: number) => (
-                  <tr
-                    key={id}
-                    className='bg-[#FFFFFF] text-[0.8rem] text-[#171515] text-center w-[100%] h-[10vh]'
-                  >
-                    <td className='font-[400] flex justify-center items-center h-[10vh]'>
-                      <img src={elem.coverImage} alt='' className='h-[50px]' />
-                    </td>
-                    <td className='font-[400] px-[10px]'>{elem.title}</td>
-                    <td className='font-[400] px-[10px]'>{elem.subCategory}</td>
-                    <td className='font-[400] px-[10px]'>{elem.category}</td>
-                    <td className='font-[400] px-[10px]'>{elem.description}</td>
-                    <td className='font-[400] px-[10px]'>100</td>
-                    <td className='font-[400] px-[10px]'>₦{elem.price}</td>
-                    <td className='font-[400] w-[100px]'>
-                      <div className='flex items-center justify-center'>
-                        <Link to={`/dashboard/product/${elem._id}`}>
-                          <img src='view.png' className='mx-[2px]' alt='' />
-                        </Link>
-                        <Link to={`/dashboard/update-product/${elem._id}`}>
-                          <img src='edit.png' className='mx-[2px]' alt='' />
-                        </Link>
-                        <img
-                          src='trash.png'
-                          className='mx-[2px]'
-                          alt=''
-                          onClick={async () =>
-                            await dispatch(deleteProduct(elem._id))
-                          }
-                        />
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
           </div>
         </div>
-        <Pagination
-          currentPage={currentPage}
-          totalPages={Math.ceil(products.length / productsPerPage)}
-          onPageChange={handlePageChange}
-        />
       </div>
     </div>
   );

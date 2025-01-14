@@ -150,7 +150,7 @@ const Login = () => {
           <p className='text-[.8rem]'>Join over 1000+ Merchants</p>
         </div>
       </div>
-      <div className='flex flex-col items-center justify-center bg-[#1100770A] xl:none xl:w-[50%] lg:w-[45%] rounded-md py-[5%] text-center'>
+      <div className='hidden lg:flex flex-col items-center justify-center bg-[#1100770A] xl:none xl:w-[50%] lg:w-[45%] rounded-md py-[5%] text-center'>
         <h2 className='text-[1.5rem] lg:text-[2.2rem] text-[#110077] font-[600]'>
           Increase Sales with Lucred
         </h2>
