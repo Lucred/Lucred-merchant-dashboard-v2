@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 import { fetchOrderData, getMerchant, withdraw } from "../../redux/actions";
 import { formatDate, getCurrentDate, numberWithCommas } from "../../utils";
-import xmark from "../../assets/xmark.png";
 import { Button } from "../../components/ui/button";
 import {
   Card,
@@ -35,6 +34,8 @@ import {
   PaginationPrevious,
 } from "../../components/ui/pagination";
 import { WithdrawModal } from "../../components/withdraw-modal";
+import { Search } from "lucide-react";
+import { Input } from "../../components/ui/input";
 
 const AnalyticCard = ({ title, amount }: { title: string; amount: string }) => (
   <Card className='w-full bg-white'>
@@ -42,7 +43,7 @@ const AnalyticCard = ({ title, amount }: { title: string; amount: string }) => (
       <CardTitle className='text-[18px]'>{title}</CardTitle>
     </CardHeader>
     <CardContent>
-      <p className='text-2xl font-bold text-blue-800'>{amount}</p>
+      <p className='text-2xl font-bold text-[#533AE9]'>{amount}</p>
     </CardContent>
   </Card>
 );
@@ -51,7 +52,7 @@ export function SalesInfo() {
   const location = useLocation();
   const orders = useSelector((state: any) => state.data);
   const merchant = useSelector((state: any) => state.merchant);
-
+  const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [showModal, setShowModal] = useState(false);
   const ordersPerPage = 10;
@@ -62,24 +63,48 @@ export function SalesInfo() {
 
   const toggleModal = () => setShowModal(!showModal);
 
+  const filteredOrders = useMemo(() => {
+    if (!searchQuery.trim()) return orders;
+
+    const searchTerm = searchQuery.toLowerCase().trim();
+    return orders.filter((order: any) => {
+      return (
+        order.productName?.toLowerCase().includes(searchTerm) ||
+        order.users?.firstname?.toLowerCase().includes(searchTerm) ||
+        order.users?.lastname?.toLowerCase().includes(searchTerm) ||
+        order.users?.phone?.includes(searchTerm) ||
+        `#${order.id}`?.includes(searchTerm) ||
+        String(order.totalPrice).includes(searchTerm)
+      );
+    });
+  }, [orders, searchQuery]);
+
   const currentOrders = useMemo(() => {
     const indexOfLastOrder = currentPage * ordersPerPage;
     const indexOfFirstOrder = indexOfLastOrder - ordersPerPage;
-    return orders.slice(indexOfFirstOrder, indexOfLastOrder);
-  }, [orders, currentPage]);
+    return filteredOrders.slice(indexOfFirstOrder, indexOfLastOrder);
+  }, [filteredOrders, currentPage]);
 
-  const totalPages = Math.ceil(orders.length / ordersPerPage);
+  const totalPages = Math.ceil(filteredOrders.length / ordersPerPage);
 
   useEffect(() => {
     dispatch(getMerchant(id));
     dispatch(fetchOrderData({ merchantId } as any));
   }, [id, merchantId, dispatch]);
 
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery]);
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+  };
+
   return (
     <div
       className={` bg-white ${
-        window.innerWidth > 768 ? `ml-[15%]` : `ml-[10%]`
-      } mr-[5%] bg-[#1100770A] min-h-[100vh] `}
+        window.innerWidth > 768 ? `ml-16` : `ml-14`
+      }  bg-[#1100770A] min-h-[100vh]`}
     >
       <div className='container mx-auto p-4 bg-background min-h-screen'>
         <div className='flex items-center justify-between mb-6'>
@@ -118,7 +143,17 @@ export function SalesInfo() {
           </Select>
         </div>
 
-        <Card>
+        <div className='relative w-full sm:w-72'>
+          <Search className='absolute left-2 top-2.5 h-4 w-4 text-muted-foreground' />
+          <Input
+            placeholder='Search by product, customer, or phone...'
+            className='pl-8 bg-white'
+            value={searchQuery}
+            onChange={handleSearchChange}
+          />
+        </div>
+
+        <Card className='mt-8'>
           <Table>
             <TableHeader>
               <TableRow>
@@ -156,7 +191,9 @@ export function SalesInfo() {
               ) : (
                 <TableRow>
                   <TableCell colSpan={8} className='h-24 text-center'>
-                    No orders found.
+                    {searchQuery
+                      ? "No matching orders found."
+                      : "No orders found."}
                   </TableCell>
                 </TableRow>
               )}
@@ -164,35 +201,39 @@ export function SalesInfo() {
           </Table>
         </Card>
 
-        <Pagination className='mt-4'>
-          <PaginationContent>
-            <PaginationItem>
-              <PaginationPrevious
-                href='#'
-                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-              />
-            </PaginationItem>
-            {[...Array(totalPages)].map((_, i) => (
-              <PaginationItem key={i}>
-                <PaginationLink
+        {filteredOrders.length > 0 && (
+          <Pagination className='mt-4'>
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious
                   href='#'
-                  onClick={() => setCurrentPage(i + 1)}
-                  isActive={currentPage === i + 1}
-                >
-                  {i + 1}
-                </PaginationLink>
+                  onClick={() =>
+                    setCurrentPage((prev) => Math.max(prev - 1, 1))
+                  }
+                />
               </PaginationItem>
-            ))}
-            <PaginationItem>
-              <PaginationNext
-                href='#'
-                onClick={() =>
-                  setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-                }
-              />
-            </PaginationItem>
-          </PaginationContent>
-        </Pagination>
+              {[...Array(totalPages)].map((_, i) => (
+                <PaginationItem key={i}>
+                  <PaginationLink
+                    href='#'
+                    onClick={() => setCurrentPage(i + 1)}
+                    isActive={currentPage === i + 1}
+                  >
+                    {i + 1}
+                  </PaginationLink>
+                </PaginationItem>
+              ))}
+              <PaginationItem>
+                <PaginationNext
+                  href='#'
+                  onClick={() =>
+                    setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+                  }
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
+        )}
 
         {showModal && (
           <WithdrawModal isOpen={showModal} onClose={toggleModal} />
@@ -203,69 +244,3 @@ export function SalesInfo() {
 }
 
 export default SalesInfo;
-
-// export const WithdrawModal = ({ toggleModal }: any) => {
-//   const [formData, setFormData] = useState<any>({
-//     _ID: localStorage.getItem("userId"),
-//     amount: "",
-//   });
-
-//   const handleChange = (e: any) => {
-//     const { name, value } = e.target;
-
-//     setFormData({
-//       ...formData,
-//       [name]: value,
-//     });
-//   };
-
-//   const dispatch = useDispatch() as unknown as any;
-
-//   const handleSubmit = (e: any) => {
-//     e.preventDefault();
-//     dispatch(withdraw(formData));
-//   };
-
-//   console.log(formData);
-//   return (
-//     <div className=' fixed h-[100vh] w-[100%] bg-[#17151599] top-[0] left-[0] flex items-center justify-center'>
-//       <div className='bg-[#fff] lg:w-[40%] w-[80%] rounded-md '>
-//         <div className='bg-[#1100770A] px-[3%] py-[2%] flex justify-between items-center'>
-//           <h3>Withdrawal Request</h3>
-//           <img
-//             src={xmark}
-//             alt=''
-//             className='cursor-pointer h-[2vh]'
-//             onClick={toggleModal}
-//           />
-//         </div>
-//         <div className='flex items-center justify-between my-[3%] px-[3%]'>
-//           <label className='text-[0.9rem]'>Amount Requested</label>
-//           <input
-//             type='number'
-//             placeholder='450000'
-//             name='amount'
-//             className='border w-[50%] px-[3%] rounded-md py-[1%]'
-//             onChange={handleChange}
-//           />
-//         </div>
-
-//         <div className='flex justify-end my-[8%] '>
-//           <Link
-//             to=''
-//             className='bg-[#FAFAFA] w-[20%] h-[5vh] text-[#533AE9] font-[600] mr-[5%] rounded-md flex justify-center items-center'
-//           >
-//             Cancel
-//           </Link>
-//           <Link
-//             to=''
-//             className='bg-[#533AE9] w-[20%] h-[5vh] text-[#fff] mr-[5%] font-[600] rounded-md flex justify-center items-center'
-//             onClick={handleSubmit}
-//           >
-//             Confirm
-//           </Link>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };

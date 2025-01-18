@@ -19,12 +19,12 @@ const UserReport = () => {
 
   return (
     <div
-      className={`${
-        window.innerWidth > 768 ? `ml-[15%]` : `ml-[10%]`
-      } bg-[#1100770A]  `}
+      className={` bg-white ${
+        window.innerWidth > 768 ? `ml-12` : `ml-12`
+      } bg-[#1100770A] min-h-[100vh]`}
     >
       <div className='mx-[3%]'>
-        <div className='flex lg:flex-row flex-col items-start justify-between'>
+        <div className='flex lg:flex-row flex-col items-start justify-between ml-6 md:ml-0'>
           <div className='py-[1%]'>
             <p className='text-[0.7rem]'>Dashboard/UserReport</p>
             <h3 className='text-[1.3rem] font-[500]'>Customer Report</h3>

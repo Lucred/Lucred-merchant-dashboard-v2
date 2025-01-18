@@ -1,24 +1,14 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable react-refresh/only-export-components */
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  BrowserRouter,
-} from "react-router-dom";
-import "./App.css";
-import Dashboard from "./pages/Dashboard/Dashboard";
-import Login from "./pages/Login";
-import { Provider, useDispatch, useSelector } from "react-redux";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Provider } from "react-redux";
 import { ToastContainer } from "react-toastify";
 import { configureStore } from "@reduxjs/toolkit";
 import thunk from "redux-thunk";
-import reducer, { fetchDataStart } from "./redux/reducer";
+import { lazy, Suspense } from "react";
+import reducer from "./redux/reducer";
 import { ProtectRoute } from "./pages/ProtectedRoute";
-import { lazy, Suspense, useEffect } from "react";
-import { Circles } from "react-loader-spinner";
 import Loader from "./components/Loader";
+import "./App.css";
+import "react-toastify/dist/ReactToastify.css";
 
 const LazyDashboard = lazy(() => import("./pages/Dashboard/Dashboard"));
 const LazyAddProduct = lazy(
@@ -27,6 +17,7 @@ const LazyAddProduct = lazy(
 const LazyLogin = lazy(() => import("./pages/Login"));
 const LazyRegister = lazy(() => import("./pages/Register"));
 const LazyViewProduct = lazy(() => import("./pages/Dashboard/SingleProduct"));
+// const LazyUserGuide = lazy(() => import("./pages/Dashboard/UserGuide"));
 
 export const store = configureStore({
   reducer: reducer,
@@ -34,31 +25,31 @@ export const store = configureStore({
 });
 
 function App() {
-  const loading = useSelector((state: any) => state.loading);
-
   return (
-    <BrowserRouter>
-      <Suspense fallback={<Loader />}>
-        <ToastContainer />
-
-        <Routes>
-          <Route path='/' element={<LazyLogin />} />
-          <Route path='/login' element={<LazyLogin />} />
-          <Route path='/register' element={<LazyRegister />} />
-          <Route
-            path='/dashboard/*'
-            element={
-              <ProtectRoute>
-                <LazyDashboard />
-              </ProtectRoute>
-            }
-          >
-            <Route path='product/:id' element={<LazyViewProduct />} />
-            <Route path='product/add-product' element={<LazyAddProduct />} />
-          </Route>
-        </Routes>
-      </Suspense>
-    </BrowserRouter>
+    <Provider store={store}>
+      <BrowserRouter>
+        <Suspense fallback={<Loader />}>
+          <ToastContainer />
+          <Routes>
+            <Route path='/' element={<LazyLogin />} />
+            <Route path='/login' element={<LazyLogin />} />
+            <Route path='/register' element={<LazyRegister />} />
+            <Route
+              path='/dashboard/*'
+              element={
+                <ProtectRoute>
+                  <LazyDashboard />
+                </ProtectRoute>
+              }
+            >
+              {/* <Route path='user-guide' element={<LazyUserGuide />} /> */}
+              <Route path='product/:id' element={<LazyViewProduct />} />
+              <Route path='product/add-product' element={<LazyAddProduct />} />
+            </Route>
+          </Routes>
+        </Suspense>
+      </BrowserRouter>
+    </Provider>
   );
 }
 

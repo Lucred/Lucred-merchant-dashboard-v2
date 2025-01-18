@@ -34,7 +34,7 @@ export default function AnalyticCard({
         <div>{icon}</div>
       </CardHeader>
       <CardContent className='bg-white rounded-xl'>
-        <div className='text-2xl font-bold text-blue-600'>{amount}</div>
+        <div className='text-2xl font-bold text-[#533AE9]'>{amount}</div>
         <p className='text-xs text-muted-foreground'>
           {percentage > 0 ? (
             <ArrowUpIcon className='mr-1 h-4 w-4 text-green-500' />

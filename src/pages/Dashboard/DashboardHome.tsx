@@ -42,28 +42,28 @@ export default function DashboardHome() {
   return (
     <div
       className={` bg-white ${
-        window.innerWidth > 768 ? `ml-[15%]` : `ml-[8%]`
-      } mr-[5%] bg-[#1100770A] min-h-[100vh]`}
+        window.innerWidth > 768 ? `ml-12` : `ml-12`
+      }  bg-[#1100770A] min-h-[100vh]`}
     >
       <div className='bg-background min-h-screen p-6'>
         <div className='space-y-6'>
-          <div className='flex justify-between items-center'>
+          {/* <div className='flex justify-between items-center'>
             <div className='flex space-x-4'>
-              <Button className='bg-white ' variant='ghost'>
+              <Button className='bg-white/60 ' variant='ghost'>
                 Last 24 hours
               </Button>
-              <Button className='bg-white ' variant='ghost'>
+              <Button className='bg-white/60 ' variant='ghost'>
                 Last weeks
               </Button>
-              <Button className='bg-white ' variant='ghost'>
+              <Button className='bg-white/60 ' variant='ghost'>
                 Last month
               </Button>
-              <Button className='bg-white ' variant='ghost'>
+              <Button className='bg-white/60 ' variant='ghost'>
                 Last year
               </Button>
             </div>
             <Select defaultValue='today'>
-              <SelectTrigger className='w-[200px]'>
+              <SelectTrigger className='w-[280px]'>
                 <SelectValue placeholder='Select date range' />
               </SelectTrigger>
               <SelectContent>
@@ -73,7 +73,7 @@ export default function DashboardHome() {
                 <SelectItem value='year'>This Year</SelectItem>
               </SelectContent>
             </Select>
-          </div>
+          </div> */}
 
           <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4'>
             <AnalyticCard
@@ -121,7 +121,7 @@ export default function DashboardHome() {
                 </CardContent>
               </Card>
               <Link to='/dashboard/product'>
-                <Button className='w-full bg-blue-600 text-white'>
+                <Button className='w-full bg-[#533AE9] text-white'>
                   See More
                 </Button>
               </Link>

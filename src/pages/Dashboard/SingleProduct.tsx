@@ -36,9 +36,9 @@ export default function ViewProduct() {
   if (isLoading) {
     return (
       <div
-        className={`${
-          window.innerWidth > 768 ? `ml-[15%]` : `ml-[8%]`
-        } mr-[5%] bg-[#1100770A] min-h-[100vh]`}
+        className={` bg-white ${
+          window.innerWidth > 768 ? `ml-16` : `ml-14`
+        }  bg-[#1100770A] min-h-[100vh]`}
       >
         <div className='min-h-screen bg-background px-4 sm:px-6'>
           <div className='py-6'>
@@ -94,104 +94,118 @@ export default function ViewProduct() {
   }
 
   return (
-    <div className={` bg-white `}>
-      <div className='min-h-screen bg-background px-4 sm:px-6'>
-        <div className='py-6'>
-          <div className='mb-6'>
-            <div className='flex items-center gap-4'>
-              <MoveLeft
-                onClick={() => navigate(-1)}
-                className='h-4 w-4 cursor-pointer'
-              />
+    <div
+      className={` bg-white ${
+        window.innerWidth > 768 ? `ml-16` : `ml-14`
+      }  bg-[#1100770A] min-h-[100vh]`}
+    >
+      <div className={` bg-white `}>
+        <div className='min-h-screen bg-background px-4 sm:px-6'>
+          <div className='py-6'>
+            <div className='mb-6'>
+              <div className='flex items-center gap-4'>
+                <MoveLeft
+                  size={32}
+                  onClick={() => navigate(-1)}
+                  className=' cursor-pointer'
+                />
 
-              <div>
-                <p className='text-sm text-muted-foreground'>
-                  Dashboard/Product/View
-                </p>
-                <h3 className='text-2xl font-medium'>View Product</h3>
+                <div>
+                  <p className='text-sm text-muted-foreground'>
+                    Dashboard/Product/View
+                  </p>
+                  <h3 className='text-2xl font-medium'>View Product</h3>
+                </div>
               </div>
             </div>
-          </div>
 
-          <Card>
-            <CardHeader className='flex-row items-center justify-between'>
-              <h3 className='text-xl font-semibold'>Product Details</h3>
-              <Button asChild className='bg-blue-600 text-white'>
-                <Link to={`/dashboard/update-product/${product._id}`}>
-                  <Pencil className='mr-2 h-4 w-4' />
-                  Update Product
-                </Link>
-              </Button>
-            </CardHeader>
-            <CardContent>
-              <div className='grid gap-6 md:grid-cols-2'>
-                <div className='space-y-4'>
-                  <div className='aspect-square overflow-hidden rounded-lg border'>
-                    <img
-                      src={product.coverImage}
-                      alt={product.title}
-                      className='h-full w-full object-cover'
-                    />
-                  </div>
-                </div>
-
-                <div className='space-y-6'>
-                  <div>
-                    <h2 className='text-2xl font-bold'>{product.title}</h2>
-                    <p className='text-2xl font-semibold text-primary mt-2'>
-                      ₦{numberWithCommas(product.price)}
-                    </p>
-                  </div>
-
-                  <Separator />
-
+            <Card>
+              <CardHeader className='flex-row items-center justify-between'>
+                <h3 className='text-xl font-semibold'>Product Details</h3>
+                <Button
+                  asChild
+                  className='bg-[#533AE9] hover:text-white text-white'
+                >
+                  <Link to={`/dashboard/update-product/${product._id}`}>
+                    <Pencil className='mr-2 h-4 w-4' />
+                    Update Product
+                  </Link>
+                </Button>
+              </CardHeader>
+              <CardContent>
+                <div className='grid gap-6 md:grid-cols-2'>
                   <div className='space-y-4'>
-                    <div>
-                      <h4 className='font-medium text-muted-foreground'>
-                        Category
-                      </h4>
-                      <p className='mt-1'>{product.category}</p>
-                    </div>
-                    <div>
-                      <h4 className='font-medium text-muted-foreground'>
-                        Subcategory
-                      </h4>
-                      <p className='mt-1'>{product.subCategory}</p>
-                    </div>
-                    <div>
-                      <h4 className='font-medium text-muted-foreground'>
-                        Stock
-                      </h4>
-                      <p className='mt-1'>100</p>
+                    <div className='aspect-square overflow-hidden rounded-lg border'>
+                      <img
+                        src={product.coverImage}
+                        alt={product.title}
+                        className='h-full w-full object-cover'
+                      />
                     </div>
                   </div>
 
-                  <Separator />
+                  <div className='space-y-6'>
+                    <div>
+                      <h2 className='text-2xl font-bold'>{product.title}</h2>
+                      <p className='text-2xl font-semibold text-primary mt-2'>
+                        ₦{numberWithCommas(product.price)}
+                      </p>
+                    </div>
 
-                  <div>
-                    <h4 className='font-medium text-muted-foreground'>
-                      Description
-                    </h4>
-                    <p className='mt-2 whitespace-pre-wrap'>
-                      {product.description}
-                    </p>
-                  </div>
-                  <div className='space-y-2'>
-                    <Label>Specifications</Label>
-                    <div className='flex flex-wrap gap-2'>
-                      {product?.specifications?.map(
-                        (spec: string, index: number) => (
-                          <Badge key={index} variant='secondary'>
-                            {spec}
-                          </Badge>
-                        )
-                      )}
+                    <Separator />
+
+                    <div className='space-y-4'>
+                      <div>
+                        <h4 className='font-medium text-muted-foreground'>
+                          Category
+                        </h4>
+                        <p className='mt-1'>{product.category}</p>
+                      </div>
+                      <div>
+                        <h4 className='font-medium text-muted-foreground'>
+                          Subcategory
+                        </h4>
+                        <p className='mt-1'>{product.subCategory}</p>
+                      </div>
+                      <div>
+                        <h4 className='font-medium text-muted-foreground'>
+                          Stock
+                        </h4>
+                        <p className='mt-1'>100</p>
+                      </div>
+                    </div>
+
+                    <Separator />
+
+                    <div>
+                      <h4 className='font-medium text-muted-foreground'>
+                        Description
+                      </h4>
+                      <p className='mt-2 whitespace-pre-wrap'>
+                        {product.description}
+                      </p>
+                    </div>
+                    <div className='space-y-2'>
+                      <Label>Specifications</Label>
+                      <div className='flex flex-wrap gap-2'>
+                        {product?.specifications?.map(
+                          (spec: string, index: number) => (
+                            <Badge
+                              className='bg-[#533AE9] text-white p-1'
+                              key={index}
+                              variant='secondary'
+                            >
+                              {spec}
+                            </Badge>
+                          )
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </div>
     </div>

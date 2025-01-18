@@ -6,36 +6,42 @@ import DashboardAddProduct from "./DashboardAddProduct";
 import SalesInfo from "./SalesInfo";
 import Profile from "./Profile";
 import UserReport from "./UserReport";
+import UserGuide from "./UserGuide";
 import Settings from "./Settings";
 import SingleProduct from "./SingleProduct";
 import { DashNav } from "../../components/dash-nav";
+import { useState } from "react";
 
 const Dashboard = () => {
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+
   return (
     <div className=''>
-      <Sidebar />
+      <Sidebar onCollapse={(collapsed) => setSidebarCollapsed(collapsed)} />
       <div
         className={`${
-          window.innerWidth > 768 ? `ml-[15%]` : `ml-[10%]`
-        }  bg-[#1100770A]`}
+          sidebarCollapsed ? "ml-64" : "ml-3"
+        } transition-all duration-300 bg-[#1100770A]`}
       >
         <DashNav />
       </div>
-
-      <Routes>
-        <Route path='/' element={<DashboardHome />} />
-        <Route path='/product' element={<DashboardProduct />} />
-        <Route path='/product/:productId' element={<SingleProduct />} />
-        <Route path='/add-product' element={<DashboardAddProduct />} />
-        <Route
-          path='/update-product/:productId'
-          element={<DashboardAddProduct />}
-        />
-        <Route path='/sales-info' element={<SalesInfo />} />
-        <Route path='/profile' element={<Profile />} />
-        <Route path='/customer-report' element={<UserReport />} />
-        <Route path='/settings' element={<Settings />} />
-      </Routes>
+      <div className=''>
+        <Routes>
+          <Route path='/' element={<DashboardHome />} />
+          <Route path='/product' element={<DashboardProduct />} />
+          <Route path='/product/:productId' element={<SingleProduct />} />
+          <Route path='/add-product' element={<DashboardAddProduct />} />
+          <Route
+            path='/update-product/:productId'
+            element={<DashboardAddProduct />}
+          />
+          <Route path='/sales-info' element={<SalesInfo />} />
+          <Route path='/profile' element={<Profile />} />
+          <Route path='/customer-report' element={<UserReport />} />
+          <Route path='/user-guide' element={<UserGuide />} />
+          <Route path='/settings' element={<Settings />} />
+        </Routes>
+      </div>
     </div>
   );
 };

@@ -99,8 +99,8 @@ const DashboardProduct = () => {
   return (
     <div
       className={` bg-white ${
-        window.innerWidth > 768 ? `ml-[15%]` : `ml-[8%]`
-      } mr-[5%] bg-[#1100770A] min-h-[100vh]`}
+        window.innerWidth > 768 ? `ml-12` : `ml-12`
+      }  bg-[#1100770A] min-h-[100vh]`}
     >
       <div className='min-h-screen bg-background px-4 sm:px-6'>
         <div className='py-6'>
@@ -122,7 +122,7 @@ const DashboardProduct = () => {
               </div>
               <Button
                 asChild
-                className='w-full sm:w-auto bg-blue-600 text-white'
+                className='w-full sm:w-auto bg-[#533AE9] hover:bg-[#533AE9]/40 text-white hover:text-white'
               >
                 <Link to='/dashboard/add-product'>
                   <Plus className='mr-2 h-4 w-4' />
@@ -226,7 +226,7 @@ const DashboardProduct = () => {
                                     className='h-4 w-4 cursor-pointer'
                                   />
                                 </AlertDialogTrigger>
-                                <AlertDialogContent className='bg-white'>
+                                <AlertDialogContent className='bg-white w-[90%] lg:w-full'>
                                   <AlertDialogHeader>
                                     <AlertDialogTitle>
                                       Delete Product

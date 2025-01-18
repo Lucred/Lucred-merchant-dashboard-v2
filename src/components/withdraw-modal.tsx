@@ -34,7 +34,7 @@ export function WithdrawModal({ isOpen, onClose }: WithdrawModalProps) {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className='bg-white'>
+      <DialogContent className='bg-white w-[90%] lg:w-full'>
         <DialogHeader>
           <DialogTitle>Withdrawal Request</DialogTitle>
           <DialogDescription>
@@ -61,7 +61,7 @@ export function WithdrawModal({ isOpen, onClose }: WithdrawModalProps) {
             <Button type='button' variant='outline' onClick={onClose}>
               Cancel
             </Button>
-            <Button className='bg-blue-600 text-white' type='submit'>
+            <Button className='bg-[#533AE9] text-white' type='submit'>
               Confirm
             </Button>
           </DialogFooter>

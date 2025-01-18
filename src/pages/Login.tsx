@@ -43,8 +43,8 @@ const Login = () => {
       <div className='xl:w-[50%] lg:w-[60%]  py-[5%] lg:block flex flex-col items-center justify-center'>
         <img src={lucred} alt='Lucred' />
         {tab === 1 ? (
-          <div className='text-center lg:text-left'>
-            <div className='mt-[15%]'>
+          <div className='text-center space-y-8 md:space-y-3  lg:text-left w-full'>
+            <div className='mt-4'>
               <h3 className='font-[500] text-[2.4rem]'>Welcome back</h3>
               <p className='text-[#8C858D]'>
                 Welcome back! Please enter your details.{" "}
@@ -57,7 +57,7 @@ const Login = () => {
                 type='text'
                 name='email'
                 placeholder='Enter your email'
-                className='border rounded-md w-[100%] lg:w-[70%] pl-[5%] py-[1%]'
+                className='border rounded-md h-12 w-[100%] lg:w-[70%] pl-[5%] py-[1%]'
                 onChange={handleChange}
               />
             </div>
@@ -68,7 +68,7 @@ const Login = () => {
                 type='password'
                 name='password'
                 placeholder='Enter your password'
-                className='border rounded-md w-[100%] lg:w-[70%] pl-[5%] py-[1%]'
+                className='border rounded-md w-[100%] h-12 lg:w-[70%] pl-[5%] py-[1%]'
                 onChange={handleChange}
               />
             </div>
@@ -77,12 +77,12 @@ const Login = () => {
                 <input type='checkbox' className='bg-[#533AE9]' />
                 <label className='ml-[5px]'>Remember me</label>
               </div>
-              <button
+              <p
                 className='text-black bg-[transparent]'
                 onClick={() => setTab((tab) => tab + 1)}
               >
                 Forgot password?
-              </button>
+              </p>
             </div>
             <button
               className='bg-[#533AE9] text-white rounded-md w-[70%]'
@@ -93,7 +93,7 @@ const Login = () => {
               {loading ? "Please wait..." : "Sign in"}
             </button>
             <p className=' text-center text-[.8rem] lg:w-[70%] my-[3%]'>
-              Want to become a Merchant? <Link to={"/register"}>Sign up</Link>
+              Want to become a Merchant? <Link to={""}>Sign up</Link>
             </p>
           </div>
         ) : (

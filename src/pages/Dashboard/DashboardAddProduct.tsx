@@ -174,6 +174,8 @@ function AddProduct() {
   const [specInput, setSpecInput] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [originalImageUrl, setOriginalImageUrl] = useState<string>("");
 
   const [formData, setFormData] = useState({
     title: "",
@@ -227,13 +229,16 @@ function AddProduct() {
 
   useEffect(() => {
     if (productId) {
-      const product = products.find((p: any) => p._id === productId); // Filter the product by ID
+      const product = products.find((p: any) => p._id === productId);
       if (product) {
         setFormData({
           ...product,
           specifications: product.specifications || [],
+          coverImage: null, // Reset coverImage since we'll handle it separately
         });
-        setImagePreview(product.coverImageUrl || "");
+        setSpecifications(product.specifications || []);
+        setImagePreview(product.coverImageUrl || product.coverImage || "");
+        // setOriginalImageUrl(product.coverImageUrl || product.coverImage || "");
       }
     }
   }, [productId, products]);
@@ -265,12 +270,13 @@ function AddProduct() {
 
   const validateForm = () => {
     const newErrors = {
-      title: formData.title ? "" : "Product name is required",
+      title: formData.title.trim() ? "" : "Product name is required",
       category: formData.category ? "" : "Category is required",
       subCategory: formData.subCategory ? "" : "Brand is required",
-      description: formData.description ? "" : "Description is required",
+      description: formData.description.trim() ? "" : "Description is required",
       price: formData.price ? "" : "Price is required",
-      coverImage: formData.coverImage ? "" : "Product image is required",
+      coverImage:
+        !productId && !formData.coverImage ? "Product image is required" : "",
     };
 
     setErrors(newErrors);
@@ -285,8 +291,10 @@ function AddProduct() {
 
     if (!validateForm()) {
       setIsButtonDisabled(false);
+      toast.error("Please fill all required fields");
       return;
     }
+
     try {
       const submitData = new FormData();
       submitData.append("title", formData.title);
@@ -295,50 +303,65 @@ function AddProduct() {
       submitData.append("description", formData.description);
       submitData.append("price", formData.price);
       submitData.append("isAvailable", String(formData.isAvailable));
-      // submitData.append("merchantId", formData.merchantId || "");
       submitData.append("categoryId", formData.categoryId);
       submitData.append(
         "specifications",
         JSON.stringify(formData.specifications)
       );
 
-      if (formData.coverImage) {
+      if (formData.coverImage instanceof File) {
         submitData.append("coverImage", formData.coverImage);
       }
 
       if (productId) {
-        await dispatch(
+        const response = await dispatch(
           updateProduct({ id: productId, formData: submitData }) as any
         );
+
+        // Check if the update was successful
+        if (response?.payload?.error) {
+          throw new Error(response.payload.error);
+        }
+
+        toast.success("Product updated successfully");
+        navigate("/dashboard/product");
       } else {
         submitData.append("merchantId", formData.merchantId || "");
-        await dispatch(createProducts(submitData) as any);
+        const response = await dispatch(createProducts(submitData) as any);
 
-        console.log(submitData);
+        if (response?.payload?.error) {
+          throw new Error(response.payload.error);
+        }
+
+        toast.success("Product created successfully");
+        navigate("/dashboard/product");
       }
-      toast.success(
-        `Product ${productId ? "updated" : "created"} successfully`
-      );
-      navigate("/dashboard/product");
     } catch (error: any) {
       setIsButtonDisabled(false);
-      toast.error(error.message);
-      console.error("Error submitting form:", error);
-      setError(error.message || "An error occurred while submitting the form");
+      const errorMessage =
+        error.message || "An error occurred while updating the product";
+      toast.error(errorMessage);
+      setError(errorMessage);
+    } finally {
+      setIsButtonDisabled(false);
     }
   };
 
   return (
     <div
-      className={`bg-white ${
-        window.innerWidth > 768 ? `ml-[15%]` : `ml-[8%]`
-      } mr-[5%] bg-[#1100770A] min-h-[100vh]`}
+      className={` bg-white ${
+        window.innerWidth > 768 ? `ml-12` : `ml-12`
+      }  bg-[#1100770A] min-h-[100vh]`}
     >
       <div className='min-h-screen bg-background px-4 sm:px-6'>
         <div className='py-6'>
           <div className='mb-6'>
             <div className='flex items-center gap-4'>
-              <MoveLeft size={32} onClick={() => navigate(-1)} className='' />
+              <MoveLeft
+                size={32}
+                onClick={() => navigate(-1)}
+                className='cursor-pointer'
+              />
 
               <div>
                 <p className='text-sm text-muted-foreground'>
@@ -409,7 +432,7 @@ function AddProduct() {
                 </div>
 
                 <div className='space-y-2'>
-                  <Label htmlFor='subCategory'>Brand</Label>
+                  <Label htmlFor='subCategory'>Subcategory</Label>
                   <Select
                     value={formData.subCategory}
                     onValueChange={(value) =>
@@ -513,8 +536,10 @@ function AddProduct() {
                       onChange={(e) => {
                         if (e.target.files && e.target.files[0]) {
                           const reader = new FileReader();
-                          reader.onload = (e) =>
-                            setImagePreview(e.target?.result as string);
+                          reader.onload = (e) => {
+                            const preview = e.target?.result as string;
+                            setImagePreview(preview);
+                          };
                           reader.readAsDataURL(e.target.files[0]);
                           setFormData((prev) => ({
                             ...prev,
@@ -522,7 +547,7 @@ function AddProduct() {
                           }));
                         }
                       }}
-                      required
+                      required={!productId} // Only required for new products
                     />
                   </div>
                   {errors.coverImage && (
@@ -555,10 +580,19 @@ function AddProduct() {
                 <div className='flex gap-4 pt-4'>
                   <Button
                     type='submit'
-                    className='flex-1 bg-blue-600 text-white'
-                    disabled={isButtonDisabled}
+                    className='flex-1 bg-[#533AE9] hover:bg-[#533AE9]/40 hover:text-white text-white'
+                    disabled={isLoading}
                   >
-                    {productId ? "Update Product" : "Add Product"}
+                    {isLoading ? (
+                      <div className='flex items-center gap-2'>
+                        <span className='animate-spin'>⊚</span>
+                        {productId ? "Updating..." : "Adding..."}
+                      </div>
+                    ) : productId ? (
+                      "Update Product"
+                    ) : (
+                      "Add Product"
+                    )}
                   </Button>
                   <Button
                     type='button'

@@ -230,10 +230,25 @@ export const updateProduct = createAsyncThunk(
     try {
       dispatch(fetchDataStart);
       const response = await formDataPut(`/products/${id}`, formData);
+      if (response?.data) {
+        dispatch(fetchDataSuccess(response.data));
+        return { success: true, data: response.data };
+      }
+
+      throw new Error("No data received from server");
     } catch (error: any) {
-      console.log(error.response.data.error);
-      // toast.error(error.response.data.Error);
-      dispatch(fetchDataFailure(error.response.data.error));
+      const errorMessage =
+        error.response?.data?.Error ||
+        error.response?.data?.error ||
+        error.message ||
+        "Failed to update product";
+
+      console.error("Update product error:", errorMessage);
+      dispatch(fetchDataFailure(errorMessage));
+      toast.error(errorMessage);
+
+      // Return error object to be handled in the component
+      return { error: errorMessage };
     }
   }
 );
