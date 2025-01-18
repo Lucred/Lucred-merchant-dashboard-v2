@@ -175,7 +175,8 @@ function AddProduct() {
   const [error, setError] = useState<string | null>(null);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [originalImageUrl, setOriginalImageUrl] = useState<string>("");
+  // const [originalImageUrl, setOriginalImageUrl] = useState<string>("");
+  const [isAvailable, setIsAvailable] = useState<boolean>(true);
 
   const [formData, setFormData] = useState({
     title: "",
@@ -238,7 +239,6 @@ function AddProduct() {
         });
         setSpecifications(product.specifications || []);
         setImagePreview(product.coverImageUrl || product.coverImage || "");
-        // setOriginalImageUrl(product.coverImageUrl || product.coverImage || "");
       }
     }
   }, [productId, products]);
@@ -274,6 +274,7 @@ function AddProduct() {
       category: formData.category ? "" : "Category is required",
       subCategory: formData.subCategory ? "" : "Brand is required",
       description: formData.description.trim() ? "" : "Description is required",
+      // isAvailable: formData?.isAvailable ? "Set Product availability" : "",
       price: formData.price ? "" : "Price is required",
       coverImage:
         !productId && !formData.coverImage ? "Product image is required" : "",
@@ -302,7 +303,10 @@ function AddProduct() {
       submitData.append("subCategory", formData.subCategory);
       submitData.append("description", formData.description);
       submitData.append("price", formData.price);
-      submitData.append("isAvailable", String(formData.isAvailable));
+      submitData.append(
+        "isAvailable",
+        formData.isAvailable === true ? "true" : "false"
+      );
       submitData.append("categoryId", formData.categoryId);
       submitData.append(
         "specifications",
@@ -456,6 +460,38 @@ function AddProduct() {
                       {errors.subCategory}
                     </div>
                   )}
+                </div>
+                <div className='space-y-2'>
+                  <Label htmlFor='availabilty'>
+                    Is this product available?
+                  </Label>
+                  <Select
+                    value={String(formData.isAvailable)}
+                    onValueChange={(value) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        isAvailable: value === "true",
+                      }))
+                    }
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder='Select availability' />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem
+                        value={"true"}
+                        // onClick={() => setIsAvailable(true)}
+                      >
+                        Yes
+                      </SelectItem>
+                      <SelectItem
+                        value={"false"}
+                        // onClick={() => setIsAvailable(false)}
+                      >
+                        No
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
 
                 <div className='space-y-2'>

@@ -169,6 +169,14 @@ export default function ViewProduct() {
                       </div>
                       <div>
                         <h4 className='font-medium text-muted-foreground'>
+                          Available
+                        </h4>
+                        <p className='mt-1'>
+                          {product.isAvailable === true ? "Yes" : "No"}
+                        </p>
+                      </div>
+                      <div>
+                        <h4 className='font-medium text-muted-foreground'>
                           Stock
                         </h4>
                         <p className='mt-1'>100</p>
