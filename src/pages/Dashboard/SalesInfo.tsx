@@ -1,310 +1,246 @@
-import { Link, useLocation } from "react-router-dom";
-import { SelectInput } from "./DashboardAddProduct";
-import { AnalyticCard } from "./DashboardHome";
-import phone from "../../assets/phone.png";
-import xmark from "../../assets/xmark.png";
-import { useEffect, useState } from "react";
-import { fetchOrderData, getMerchant, withdraw } from "../../redux/actions";
+import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { Link, useLocation } from "react-router-dom";
+import { fetchOrderData, getMerchant, withdraw } from "../../redux/actions";
+import { formatDate, getCurrentDate, numberWithCommas } from "../../utils";
+import { Button } from "../../components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "../../components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../../components/ui/select";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "../../components/ui/table";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "../../components/ui/pagination";
+import { WithdrawModal } from "../../components/withdraw-modal";
+import { Search } from "lucide-react";
+import { Input } from "../../components/ui/input";
 
-const formatDate = (dateString: any) => {
-  const date = new Date(dateString);
-  return date.toLocaleString("en-US", {
-    day: "numeric",
-    month: "long", // e.g., 'October'
-    year: "numeric",
-    hour: "numeric",
-    minute: "numeric",
-    second: "numeric",
-    hour12: true, // Use 12-hour format
-  });
-};
+const AnalyticCard = ({ title, amount }: { title: string; amount: string }) => (
+  <Card className='w-full bg-white'>
+    <CardHeader>
+      <CardTitle className='text-[18px]'>{title}</CardTitle>
+    </CardHeader>
+    <CardContent>
+      <p className='text-2xl font-bold text-[#533AE9]'>{amount}</p>
+    </CardContent>
+  </Card>
+);
 
-const SalesInfo = () => {
+export function SalesInfo() {
   const location = useLocation();
   const orders = useSelector((state: any) => state.data);
-
-  const [showModal, setShowModal] = useState(false);
-  const toggleModal = () => {
-    setShowModal(!showModal);
-  };
-
   const merchant = useSelector((state: any) => state.merchant);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [showModal, setShowModal] = useState(false);
+  const ordersPerPage = 10;
 
   const dispatch = useDispatch() as unknown as any;
   const id = localStorage.getItem("userId") as string;
   const merchantId = localStorage.getItem("merchantId");
+
+  const toggleModal = () => setShowModal(!showModal);
+
+  const filteredOrders = useMemo(() => {
+    if (!searchQuery.trim()) return orders;
+
+    const searchTerm = searchQuery.toLowerCase().trim();
+    return orders.filter((order: any) => {
+      return (
+        order.productName?.toLowerCase().includes(searchTerm) ||
+        order.users?.firstname?.toLowerCase().includes(searchTerm) ||
+        order.users?.lastname?.toLowerCase().includes(searchTerm) ||
+        order.users?.phone?.includes(searchTerm) ||
+        `#${order.id}`?.includes(searchTerm) ||
+        String(order.totalPrice).includes(searchTerm)
+      );
+    });
+  }, [orders, searchQuery]);
+
+  const currentOrders = useMemo(() => {
+    const indexOfLastOrder = currentPage * ordersPerPage;
+    const indexOfFirstOrder = indexOfLastOrder - ordersPerPage;
+    return filteredOrders.slice(indexOfFirstOrder, indexOfLastOrder);
+  }, [filteredOrders, currentPage]);
+
+  const totalPages = Math.ceil(filteredOrders.length / ordersPerPage);
 
   useEffect(() => {
     dispatch(getMerchant(id));
     dispatch(fetchOrderData({ merchantId } as any));
   }, [id, merchantId, dispatch]);
 
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery]);
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+  };
+
   return (
     <div
-      className={`${
-        window.innerWidth > 768 ? `ml-[15%]` : `ml-[10%]`
-      } mr-[5%] bg-[#1100770A] min-h-[100vh] `}
+      className={` bg-white ${
+        window.innerWidth > 768 ? `ml-16` : `ml-14`
+      }  bg-[#1100770A] min-h-[100vh]`}
     >
-      <div className='mx-[3%]'>
-        <div className='flex items-center justify-between'>
-          <div className='py-[1%]'>
-            <p className='text-[0.7rem]'>Dashboard/Sales</p>
-            <h3 className='text-[1.3rem] font-[500]'>Sales Info</h3>
+      <div className='container mx-auto p-4 bg-background min-h-screen'>
+        <div className='flex items-center justify-between mb-6'>
+          <div>
+            <p className='text-sm text-muted-foreground'>Dashboard/Sales</p>
+            <h3 className='text-2xl font-medium'>Sales Info</h3>
           </div>
-          {location.pathname === "/dashboard/sales-info" ? (
-            <Link
-              to=''
+          {location.pathname === "/dashboard/sales-info" && (
+            <Button
               className='bg-[#533AE9] lg:w-[15%] w-[50%] h-[5vh] text-[#fff] mr-[5%] rounded-md flex justify-center items-center'
               onClick={toggleModal}
             >
               Withdraw
-            </Link>
-          ) : null}
+            </Button>
+          )}
         </div>
-        <div className='flex lg:flex-row flex-col justify-between my-[3%] lg:my-[0%]'>
-          <div className=' w-[100%] overflow-scroll scrollbar-none'>
-            <div className='lg:w-[65%] md:w-[100%] w-[150%] flex justify-between '>
-              <AnalyticCard
-                width={`w-[45%]`}
-                total={`Sales`}
-                amount={`₦` + merchant?.currentRevenue || 0}
-              />
-              <AnalyticCard
-                width={`w-[45%]`}
-                total={`Balance`}
-                amount={`₦` + merchant?.walletBalance || 0}
-              />
-            </div>
-          </div>
 
-          <SelectInput
-            width={`lg:w-[30%] md:w-[50%]`}
-            value={`Today (March 18, 2022)`}
+        <div className='grid md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6'>
+          <AnalyticCard
+            title='Sales'
+            amount={`₦${numberWithCommas(merchant?.walletBalance) || 0}`}
+          />
+          <AnalyticCard
+            title='Balance'
+            amount={`₦${numberWithCommas(merchant?.availableBalance) || 0}`}
+          />
+          <Select defaultValue='today'>
+            <SelectTrigger className='w-full bg-white'>
+              <SelectValue placeholder='Select Date Range' />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value='today'>Today ({getCurrentDate()})</SelectItem>
+              <SelectItem value='week'>This Week</SelectItem>
+              <SelectItem value='month'>This Month</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div className='relative w-full sm:w-72'>
+          <Search className='absolute left-2 top-2.5 h-4 w-4 text-muted-foreground' />
+          <Input
+            placeholder='Search by product, customer, or phone...'
+            className='pl-8 bg-white'
+            value={searchQuery}
+            onChange={handleSearchChange}
           />
         </div>
-        <div className='w-[100%] overflow-scroll'>
-          <table className=' lg:w-[100%] border rounded-md my-[2%] w-[250%]'>
-            <thead>
-              <tr className='bg-[#1100770A] text-[0.8rem]  text-[#56555B] w-[100%] px-[5%] bg-[#fff]'>
-                <th className='font-[500] py-[1%]'>ID</th>
-                <th className='font-[500]'>Product name</th>
-                <th className='font-[500]'>Quantity</th>
-                <th className='font-[500]'>Total Price</th>
-                <th className='font-[500]'>Customer's name</th>
-                <th className='font-[500]'>Phone Number</th>
-                <th className='font-[500] '>Date</th>
-              </tr>
-            </thead>
-            <tbody className=''>
-              {orders && orders.length > 0 ? (
-                orders.map((order: any, index: number) => (
-                  <tr
-                    key={order.id}
-                    className='bg-[#1100770A] text-[0.8rem] text-[#56555B] text-center w-[100%]'
-                  >
-                    <td className='font-[400] py-[1%]'>#{index + 1}</td>
-                    <td className='font-[400] flex justify-left items-center h-[8vh] ml-[10%] md:ml-[20%]'>
+
+        <Card className='mt-8'>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>ID</TableHead>
+                <TableHead>Product name</TableHead>
+                <TableHead>Quantity</TableHead>
+                <TableHead>Total Price</TableHead>
+                <TableHead>Customer's firstname</TableHead>
+                <TableHead>Customer's lastname</TableHead>
+                <TableHead>Phone Number</TableHead>
+                <TableHead>Date</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {currentOrders && currentOrders.length > 0 ? (
+                currentOrders.map((order: any, index: number) => (
+                  <TableRow key={index}>
+                    <TableCell>#{index + 1}</TableCell>
+                    <TableCell className='flex items-center'>
                       <img
-                        src={phone}
+                        src={order.productImage}
                         alt={order.productName}
-                        className='h-[3vh] mr-[5%] truncate '
-                      />{" "}
+                        className='h-8 w-8 mr-2 object-cover rounded'
+                      />
                       {order.productName}
-                    </td>
-                    <td className='font-[400]'>₦{order.initialPrice}</td>
-                    <td className='font-[400]'>₦{order.totalPrice}</td>
-                    <td className='font-[400]'>{order.users.firstname}</td>
-                    <td className='font-[400]'>{order.users.phone}</td>
-                    <td className='font-[400]'>
-                      {formatDate(order.createdAt)}
-                    </td>
-                  </tr>
+                    </TableCell>
+                    <TableCell>{order?.quantity}</TableCell>
+                    <TableCell>₦{numberWithCommas(order.totalPrice)}</TableCell>
+                    <TableCell>{order.users.firstname}</TableCell>
+                    <TableCell>{order.users.lastname}</TableCell>
+                    <TableCell>{order.users.phone}</TableCell>
+                    <TableCell>{formatDate(order.createdAt)}</TableCell>
+                  </TableRow>
                 ))
               ) : (
-                <tr className=' h-[50vh] w-full'>
-                  <td colSpan={7} className='font-[400] text-[1.5rem]'></td>
-                </tr>
+                <TableRow>
+                  <TableCell colSpan={8} className='h-24 text-center'>
+                    {searchQuery
+                      ? "No matching orders found."
+                      : "No orders found."}
+                  </TableCell>
+                </TableRow>
               )}
-            </tbody>
-            {/* <tbody>
-              {" "}
-              <tr className='bg-[#1100770A] text-[0.8rem] text-[#56555B] text-center w-[100%] '>
-                <td className='font-[400] py-[1%]'>#24567</td>{" "}
-                <td className='font-[400] flex justify-center items-center h-[8vh]'>
-                  <img src={phone} alt='' className='h-[3vh] mr-[5%]' /> iphone
-                  XR
-                </td>
-                <td className='font-[400]'>₦160,000</td>
-                <td className='font-[400]'>₦160,000</td>
-                <td className='font-[400]'>Abiola Jimoh</td>
-                <td className='font-[400]'>08130601026</td>
-                <td className='font-[400]'>
-                  October 24th 2022, 4:18:32 am
-                </td>{" "}
-              </tr>{" "}
-              <tr className='bg-[#1100770A] text-[0.8rem] text-[#56555B] text-center w-[100%] '>
-                <td className='font-[400] py-[1%]'>#24567</td>{" "}
-                <td className='font-[400] flex justify-center items-center h-[8vh]'>
-                  <img src={phone} alt='' className='h-[3vh] mr-[5%]' /> iphone
-                  XR
-                </td>
-                <td className='font-[400]'>₦160,000</td>
-                <td className='font-[400]'>₦160,000</td>
-                <td className='font-[400]'>Abiola Jimoh</td>
-                <td className='font-[400]'>08130601026</td>
-                <td className='font-[400]'>
-                  October 24th 2022, 4:18:32 am
-                </td>{" "}
-              </tr>{" "}
-              <tr className='bg-[#1100770A] text-[0.8rem] text-[#56555B] text-center w-[100%] '>
-                <td className='font-[400] py-[1%]'>#24567</td>{" "}
-                <td className='font-[400] flex justify-center items-center h-[8vh]'>
-                  <img src={phone} alt='' className='h-[3vh] mr-[5%]' /> iphone
-                  XR
-                </td>
-                <td className='font-[400]'>₦160,000</td>
-                <td className='font-[400]'>₦160,000</td>
-                <td className='font-[400]'>Abiola Jimoh</td>
-                <td className='font-[400]'>08130601026</td>
-                <td className='font-[400]'>
-                  October 24th 2022, 4:18:32 am
-                </td>{" "}
-              </tr>{" "}
-              <tr className='bg-[#1100770A] text-[0.8rem] text-[#56555B] text-center w-[100%] '>
-                <td className='font-[400] py-[1%]'>#24567</td>{" "}
-                <td className='font-[400] flex justify-center items-center h-[8vh]'>
-                  <img src={phone} alt='' className='h-[3vh] mr-[5%]' /> iphone
-                  XR
-                </td>
-                <td className='font-[400]'>₦160,000</td>
-                <td className='font-[400]'>₦160,000</td>
-                <td className='font-[400]'>Abiola Jimoh</td>
-                <td className='font-[400]'>08130601026</td>
-                <td className='font-[400]'>
-                  October 24th 2022, 4:18:32 am
-                </td>{" "}
-              </tr>{" "}
-              <tr className='bg-[#1100770A] text-[0.8rem] text-[#56555B] text-center w-[100%] '>
-                <td className='font-[400] py-[1%]'>#24567</td>{" "}
-                <td className='font-[400] flex justify-center items-center h-[8vh]'>
-                  <img src={phone} alt='' className='h-[3vh] mr-[5%]' /> iphone
-                  XR
-                </td>
-                <td className='font-[400]'>₦160,000</td>
-                <td className='font-[400]'>₦160,000</td>
-                <td className='font-[400]'>Abiola Jimoh</td>
-                <td className='font-[400]'>08130601026</td>
-                <td className='font-[400]'>
-                  October 24th 2022, 4:18:32 am
-                </td>{" "}
-              </tr>{" "}
-              <tr className='bg-[#1100770A] text-[0.8rem] text-[#56555B] text-center w-[100%] '>
-                <td className='font-[400] py-[1%]'>#24567</td>{" "}
-                <td className='font-[400] flex justify-center items-center h-[8vh]'>
-                  <img src={phone} alt='' className='h-[3vh] mr-[5%]' /> iphone
-                  XR
-                </td>
-                <td className='font-[400]'>₦160,000</td>
-                <td className='font-[400]'>₦160,000</td>
-                <td className='font-[400]'>Abiola Jimoh</td>
-                <td className='font-[400]'>08130601026</td>
-                <td className='font-[400]'>
-                  October 24th 2022, 4:18:32 am
-                </td>{" "}
-              </tr>{" "}
-              <tr className='bg-[#1100770A] text-[0.8rem] text-[#56555B] text-center w-[100%] '>
-                <td className='font-[400] py-[1%]'>#24567</td>{" "}
-                <td className='font-[400] flex justify-center items-center h-[8vh]'>
-                  <img src={phone} alt='' className='h-[3vh] mr-[5%]' /> iphone
-                  XR
-                </td>
-                <td className='font-[400]'>₦160,000</td>
-                <td className='font-[400]'>₦160,000</td>
-                <td className='font-[400]'>Abiola Jimoh</td>
-                <td className='font-[400]'>08130601026</td>
-                <td className='font-[400]'>
-                  October 24th 2022, 4:18:32 am
-                </td>{" "}
-              </tr>
-            </tbody> */}
-          </table>
-        </div>
-      </div>
+            </TableBody>
+          </Table>
+        </Card>
 
-      {showModal ? <WithdrawModal func={toggleModal} /> : null}
+        {filteredOrders.length > 0 && (
+          <Pagination className='mt-4'>
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious
+                  href='#'
+                  onClick={() =>
+                    setCurrentPage((prev) => Math.max(prev - 1, 1))
+                  }
+                />
+              </PaginationItem>
+              {[...Array(totalPages)].map((_, i) => (
+                <PaginationItem key={i}>
+                  <PaginationLink
+                    href='#'
+                    onClick={() => setCurrentPage(i + 1)}
+                    isActive={currentPage === i + 1}
+                  >
+                    {i + 1}
+                  </PaginationLink>
+                </PaginationItem>
+              ))}
+              <PaginationItem>
+                <PaginationNext
+                  href='#'
+                  onClick={() =>
+                    setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+                  }
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
+        )}
+
+        {showModal && (
+          <WithdrawModal isOpen={showModal} onClose={toggleModal} />
+        )}
+      </div>
     </div>
   );
-};
+}
 
 export default SalesInfo;
-
-export const WithdrawModal = ({ func }: any) => {
-  const [formData, setFormData] = useState<any>({
-    _ID: localStorage.getItem("userId"),
-    amount: "",
-  });
-
-  const handleChange = (e: any) => {
-    const { name, value } = e.target;
-
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
-
-  const dispatch = useDispatch() as unknown as any;
-
-  const handleSubmit = (e: any) => {
-    e.preventDefault();
-    dispatch(withdraw(formData));
-  };
-
-  console.log(formData);
-  return (
-    <div className=' fixed h-[100vh] w-[100%] bg-[#17151599] top-[0] left-[0] flex items-center justify-center'>
-      <div className='bg-[#fff] lg:w-[40%] w-[80%] rounded-md '>
-        <div className='bg-[#1100770A] px-[3%] py-[2%] flex justify-between items-center'>
-          <h3>Withdrawal Request</h3>
-          <img
-            src={xmark}
-            alt=''
-            className='cursor-pointer h-[2vh]'
-            onClick={func}
-          />
-        </div>
-        <div className='flex items-center justify-between my-[3%] px-[3%]'>
-          <label className='text-[0.9rem]'>Amount Requested</label>
-          <input
-            type='number'
-            placeholder='450000'
-            name='amount'
-            className='border w-[50%] px-[3%] rounded-md py-[1%]'
-            onChange={handleChange}
-          />
-        </div>
-        <div className='flex items-center justify-between my-[3%] px-[3%]'>
-          <label className='text-[0.9rem]'>Withdraw To</label>
-          <SelectInput value={`Select bank account`} width={`w-[50%]`} />
-        </div>
-
-        <div className='flex justify-end my-[8%] '>
-          <Link
-            to=''
-            className='bg-[#FAFAFA] w-[20%] h-[5vh] text-[#533AE9] font-[600] mr-[5%] rounded-md flex justify-center items-center'
-          >
-            Cancel
-          </Link>
-          <Link
-            to=''
-            className='bg-[#533AE9] w-[20%] h-[5vh] text-[#fff] mr-[5%] font-[600] rounded-md flex justify-center items-center'
-            onClick={handleSubmit}
-          >
-            Confirm
-          </Link>
-        </div>
-      </div>
-    </div>
-  );
-};
