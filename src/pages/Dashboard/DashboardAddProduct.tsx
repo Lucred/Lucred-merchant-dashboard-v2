@@ -569,21 +569,23 @@ function AddProduct() {
                       type='file'
                       accept='image/*'
                       className='hidden'
-                      onChange={(e) => {
-                        if (e.target.files && e.target.files[0]) {
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                        const files = e.target.files;
+                        if (files && files.length > 0) {
+                          const file = files[0];
                           const reader = new FileReader();
-                          reader.onload = (e) => {
-                            const preview = e.target?.result as string;
+                          reader.onload = (event) => {
+                            const preview = event.target?.result as string;
                             setImagePreview(preview);
                           };
-                          reader.readAsDataURL(e.target.files[0]);
+                          reader.readAsDataURL(file);
                           setFormData((prev) => ({
                             ...prev,
-                            coverImage: e.target.files[0],
+                            coverImage: file,
                           }));
                         }
                       }}
-                      required={!productId} // Only required for new products
+                      required={!productId}
                     />
                   </div>
                   {errors.coverImage && (
