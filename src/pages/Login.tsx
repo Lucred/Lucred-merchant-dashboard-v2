@@ -18,7 +18,10 @@ const Login = () => {
   const [tab, setTab] = useState(1);
 
   const handleChange = (e: any) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    // Convert email to lowercase if the field is email
+    const processedValue = name === "email" ? value.toLowerCase() : value;
+    setFormData({ ...formData, [name]: processedValue });
   };
 
   const dispatch = useDispatch() as unknown as any;

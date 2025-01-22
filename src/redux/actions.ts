@@ -6,7 +6,6 @@ import {
   FormDataPost,
   apiDelete,
   apiGet,
-  apiPatch,
   apiPost,
   apiPut,
   formDataPut,
@@ -22,36 +21,6 @@ import {
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
-import { ErrorPayload } from "vite/types/hmrPayload";
-
-// export const registerUser = createAsyncThunk(
-//   "registerUser",
-//   async (formData: RegisterData, { dispatch }) => {
-//     try {
-//       dispatch(fetchDataStart());
-//       const response = await apiPost("/users", formData);
-//       console.log(response);
-
-//       // Assuming you'll store some data in localStorage after registration
-//       localStorage.setItem("userId", response.data.data._id);
-//       localStorage.setItem("signature", response.data.data.token);
-
-//       toast.success(response.data.message);
-
-//       dispatch(fetchDataSuccess(response.data));
-
-//       setTimeout(() => {
-//         window.location.href = "/dashboard";
-//       }, 2000);
-//     } catch (error: any) {
-//       console.log(error.response);
-//       toast.error(error.response?.statusText || "Registration failed.");
-//       dispatch(
-//         fetchDataFailure(error.response?.statusText || "Registration failed.")
-//       );
-//     }
-//   }
-// );
 
 export const loginUser = createAsyncThunk(
   "loginUser",
@@ -59,7 +28,6 @@ export const loginUser = createAsyncThunk(
     try {
       dispatch(fetchDataStart);
       const response = await apiPost("/merchants/login", formData);
-      console.log(response);
 
       localStorage.setItem("userId", response.data.data._id);
       localStorage.setItem("merchantId", response.data.data.merchantId);
@@ -71,7 +39,6 @@ export const loginUser = createAsyncThunk(
         window.location.href = "/dashboard";
       }, 2000);
     } catch (error: any) {
-      console.log(error.response);
       toast.error(error.response.statusText);
       dispatch(fetchDataFailure(error.response.statusText));
     }
@@ -86,9 +53,7 @@ export const resetUser = createAsyncThunk(
       const response = await apiGet(
         `/merchants/forgot-password?email=${email}`
       );
-      console.log(response);
     } catch (error: any) {
-      console.log(error.response.data.error);
       toast.error(error.response.data.Error);
       dispatch(fetchDataFailure(error.response.data.error));
     }
@@ -109,7 +74,6 @@ export const registerUser = createAsyncThunk(
         window.location.href = "/confirm";
       }, 2000);
     } catch (error: any) {
-      console.log(error.response.data.error);
       toast.error(error.response.data.Error);
       dispatch(fetchDataFailure(error.response.data.error));
     }
@@ -123,10 +87,9 @@ export const getMerchant = createAsyncThunk(
     try {
       dispatch(fetchDataStart);
       const response = await apiGet(`/merchants/${id}`);
-      console.log(response);
+
       dispatch(fetchDataUser(response.data.data));
     } catch (error: any) {
-      console.log(error.response.data.error);
       toast.error(error.response.data.Error);
       dispatch(fetchDataFailure(error.response.data.error));
     }
@@ -144,11 +107,8 @@ export const fetchOrderData = createAsyncThunk(
         `/checkouts/order?merchantId=${merchantId}`
       );
 
-      console.log(response.data.data);
-      // toast.success("Order data fetched successfully");
       dispatch(fetchDataSuccess(response.data.data));
     } catch (error: any) {
-      console.log(error.response);
       toast.error(error.response?.statusText || "Failed to fetch order data");
       dispatch(fetchDataFailure(error.response?.statusText));
     }
@@ -162,12 +122,11 @@ export const getCategories = createAsyncThunk(
     try {
       dispatch(fetchDataStart);
       const response = await apiGet(`/categories`);
-      console.log("resp", response.data.data);
       dispatch(fetchCategories(response.data.data));
     } catch (error: any) {
-      console.log(error.response.data.error);
-      toast.error(error.response.data.Error);
+      toast.error(error.message);
       dispatch(fetchDataFailure(error.response.data.error));
+      throw error;
     }
   }
 );
@@ -181,11 +140,10 @@ export const createProducts = createAsyncThunk(
       const response = await FormDataPost(`/products`, formData);
       dispatch(fetchProduct(response.data.data));
       console.log(response.data.message);
-      // toast.success(response.data.message);
     } catch (error: any) {
-      console.log(error.response.data.Error);
-      toast.error(error.response.data.Error);
+      toast.error(error.message);
       dispatch(fetchDataFailure(error.response.data.error));
+      throw error;
     }
   }
 );
@@ -197,16 +155,16 @@ export const getProducts = createAsyncThunk<void, { id: string }>(
     try {
       dispatch(fetchDataStart());
       const response = await apiGet(
-        `/products?merchantId=${id}&page=1&size=25`
+        `/products?merchantId=${id}&page=1&size=9999999999`
       );
       dispatch(fetchProduct(response.data.data));
       console.log(response.data.data);
     } catch (error: any) {
-      console.log(error.response.error);
-      toast.error(error.response.error || "Failed to fetch products");
+      toast.error(error.message);
       dispatch(
         fetchDataFailure(error.response?.data?.error || "Unknown error")
       );
+      throw error;
     }
   }
 );
@@ -217,7 +175,6 @@ export const getProductById = (id: string) => async (dispatch: any) => {
     dispatch(fetchDataSuccess(response.data));
     return response.data;
   } catch (error: any) {
-    console.error("Error fetching product:", error);
     dispatch(fetchDataFailure(error.message || "Failed to fetch product"));
     throw error;
   }
@@ -318,10 +275,6 @@ export const withdraw = createAsyncThunk(
       dispatch(fetchDataStart);
       const response = await apiPost(`/merchants/withdraw`, formData);
       toast.success(response.data.message);
-      // dispatch(fetchDataSuccess(response.data));
-      // setTimeout(() => {
-      //   window.location.href = "/dashboard/profile";
-      // }, 2000);
     } catch (error: any) {
       toast.error(error.response.data.message);
       dispatch(fetchDataFailure(error.response.data.error));
