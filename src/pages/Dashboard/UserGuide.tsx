@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react";
-import VideoGrid from "../../components/VideoGrid";
-import VideoPlayer from "../../components/VideoPlayer";
-import { Video } from "types/video";
 import { fetchVideos } from "../../api/video";
+import { Video } from "types/video";
 
 const UserGuide = () => {
   const [videos, setVideos] = useState<Video[]>([]);
@@ -18,21 +16,74 @@ const UserGuide = () => {
 
   return (
     <div
-      className={` bg-white ${
+      className={`bg-white ${
         window.innerWidth > 768 ? `ml-16` : `ml-12`
       } bg-[#1100770A] min-h-[100vh]`}
     >
-      <div className=' mx-auto p-4 pb-20'>
+      <div className='mx-auto p-4 pb-20'>
         <h1 className='text-3xl font-bold mb-6'>Learn More about Lucred</h1>
         {selectedVideo ? (
-          <VideoPlayer
+          <YouTubeVideoPlayer
             video={selectedVideo}
             onClose={() => setSelectedVideo(null)}
           />
         ) : (
-          <VideoGrid videos={[]} onVideoSelect={setSelectedVideo} />
+          <YouTubeVideoGrid videos={videos} onVideoSelect={setSelectedVideo} />
         )}
       </div>
+    </div>
+  );
+};
+
+interface YouTubeVideoGridProps {
+  videos: Video[];
+  onVideoSelect: (video: Video) => void;
+}
+
+const YouTubeVideoGrid = ({ videos, onVideoSelect }: YouTubeVideoGridProps) => {
+  return (
+    <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'>
+      {videos.map((video) => (
+        <div
+          key={video.id}
+          className='cursor-pointer hover:opacity-75 transition-opacity'
+          onClick={() => onVideoSelect(video)}
+        >
+          <img
+            src={`https://img.youtube.com/vi/${video.videoUrl}/mqdefault.jpg`}
+            alt={video.title}
+            className='w-full rounded-lg shadow-md h-48 object-cover'
+          />
+          <h2 className='mt-2 text-lg font-semibold'>{video.title}</h2>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+interface YouTubeVideoPlayerProps {
+  video: Video;
+  onClose: () => void;
+}
+
+const YouTubeVideoPlayer = ({ video, onClose }: YouTubeVideoPlayerProps) => {
+  return (
+    <div className='relative'>
+      <button
+        className='absolute top-2 right-2 z-10 text-white bg-black bg-opacity-50 rounded-full p-2'
+        onClick={onClose}
+      >
+        ✕
+      </button>
+      <div className='w-full aspect-video'>
+        <iframe
+          src={`https://www.youtube.com/embed/${video.videoUrl}?autoplay=1`}
+          title={video.title}
+          className='w-full h-full rounded-lg'
+          allowFullScreen
+        />
+      </div>
+      <h2 className='mt-4 text-xl font-bold'>{video.title}</h2>
     </div>
   );
 };
