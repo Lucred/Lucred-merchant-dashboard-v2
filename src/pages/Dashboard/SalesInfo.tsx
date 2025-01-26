@@ -25,17 +25,11 @@ import {
   TableHeader,
   TableRow,
 } from "../../components/ui/table";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "../../components/ui/pagination";
+
 import { WithdrawModal } from "../../components/withdraw-modal";
 import { Search } from "lucide-react";
 import { Input } from "../../components/ui/input";
+import Pagination from "../../components/Pagination";
 
 const AnalyticCard = ({ title, amount }: { title: string; amount: string }) => (
   <Card className='w-full bg-white'>
@@ -63,8 +57,12 @@ export function SalesInfo() {
 
   const toggleModal = () => setShowModal(!showModal);
 
+  const handlePageChange = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
+  };
+
   const filteredOrders = useMemo(() => {
-    if (!searchQuery.trim()) return orders;
+    if (!searchQuery.trim()) return [...orders].reverse();
 
     const searchTerm = searchQuery.toLowerCase().trim();
     return orders.filter((order: any) => {
@@ -83,7 +81,7 @@ export function SalesInfo() {
     const indexOfLastOrder = currentPage * ordersPerPage;
     const indexOfFirstOrder = indexOfLastOrder - ordersPerPage;
     return filteredOrders.slice(indexOfFirstOrder, indexOfLastOrder);
-  }, [filteredOrders, currentPage]);
+  }, [filteredOrders, currentPage, ordersPerPage]);
 
   const totalPages = Math.ceil(filteredOrders.length / ordersPerPage);
 
@@ -171,7 +169,9 @@ export function SalesInfo() {
               {currentOrders && currentOrders.length > 0 ? (
                 currentOrders.map((order: any, index: number) => (
                   <TableRow key={index}>
-                    <TableCell>#{index + 1}</TableCell>
+                    <TableCell>
+                      #{(currentPage - 1) * ordersPerPage + index + 1}
+                    </TableCell>
                     <TableCell className='flex items-center'>
                       <img
                         src={order.productImage}
@@ -200,40 +200,13 @@ export function SalesInfo() {
             </TableBody>
           </Table>
         </Card>
-
-        {filteredOrders.length > 0 && (
-          <Pagination className='mt-4'>
-            <PaginationContent>
-              <PaginationItem>
-                <PaginationPrevious
-                  href='#'
-                  onClick={() =>
-                    setCurrentPage((prev) => Math.max(prev - 1, 1))
-                  }
-                />
-              </PaginationItem>
-              {[...Array(totalPages)].map((_, i) => (
-                <PaginationItem key={i}>
-                  <PaginationLink
-                    href='#'
-                    onClick={() => setCurrentPage(i + 1)}
-                    isActive={currentPage === i + 1}
-                  >
-                    {i + 1}
-                  </PaginationLink>
-                </PaginationItem>
-              ))}
-              <PaginationItem>
-                <PaginationNext
-                  href='#'
-                  onClick={() =>
-                    setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-                  }
-                />
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>
-        )}
+        <div className='mt-4 flex justify-center'>
+          <Pagination
+            currentPage={currentPage}
+            totalPages={Math.ceil(filteredOrders.length / ordersPerPage)}
+            onPageChange={handlePageChange}
+          />
+        </div>
 
         {showModal && (
           <WithdrawModal isOpen={showModal} onClose={toggleModal} />

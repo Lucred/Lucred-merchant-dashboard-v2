@@ -104,7 +104,7 @@ export const fetchOrderData = createAsyncThunk(
       dispatch(fetchDataStart());
 
       const response = await apiGet(
-        `/checkouts/order?merchantId=${merchantId}`
+        `/checkouts/order?merchantId=${merchantId}&page=1&size=9999999999`
       );
 
       dispatch(fetchDataSuccess(response.data.data));
