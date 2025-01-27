@@ -77,3 +77,15 @@ export interface OrderData {
 export interface TokenData {
   token: string;
 }
+
+export interface Category {
+  _id: string;
+  name: string;
+  description: string;
+  coverImage: string;
+  subCategories: string[];
+  featuredCategories: boolean;
+  totalMerchants: number;
+  createdAt: string;
+  updatedAt: string;
+}

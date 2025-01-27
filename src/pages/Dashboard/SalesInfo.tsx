@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { fetchOrderData, getMerchant, withdraw } from "../../redux/actions";
 import { formatDate, getCurrentDate, numberWithCommas } from "../../utils";
 import { Button } from "../../components/ui/button";
+import { Loader2, Search } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -25,11 +26,23 @@ import {
   TableHeader,
   TableRow,
 } from "../../components/ui/table";
-
 import { WithdrawModal } from "../../components/withdraw-modal";
-import { Search } from "lucide-react";
 import { Input } from "../../components/ui/input";
 import Pagination from "../../components/Pagination";
+import { Skeleton } from "../../components/ui/skeleton";
+
+const LoadingAnalyticCard = ({ title }: { title: string }) => (
+  <Card className='w-full bg-white'>
+    <CardHeader>
+      <CardTitle className='text-[18px]'>{title}</CardTitle>
+    </CardHeader>
+    <CardContent>
+      <div className='flex items-center justify-start'>
+        <Loader2 className='h-8 w-8 animate-spin text-[#533AE9]' />
+      </div>
+    </CardContent>
+  </Card>
+);
 
 const AnalyticCard = ({ title, amount }: { title: string; amount: string }) => (
   <Card className='w-full bg-white'>
@@ -42,10 +55,54 @@ const AnalyticCard = ({ title, amount }: { title: string; amount: string }) => (
   </Card>
 );
 
+const SkeletonRow = () => (
+  <TableRow>
+    {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+      <TableCell key={i}>
+        <div className='h-4 bg-gray-200 rounded animate-pulse' />
+      </TableCell>
+    ))}
+  </TableRow>
+);
+
+const TableLoadingSkeleton = () =>
+  Array.from({ length: 5 }).map((_, index) => (
+    <TableRow key={`loading-${index}`}>
+      <TableCell>
+        <Skeleton className='bg-gray-100 animate-pulse h-4 w-12 ' />
+      </TableCell>
+      <TableCell>
+        <Skeleton className='bg-gray-100 animate-pulse h-12 w-12 ' />
+      </TableCell>
+      <TableCell>
+        <Skeleton className='bg-gray-100 animate-pulse h-4 w-28 sm:w-[100px]' />
+      </TableCell>
+      <TableCell>
+        <Skeleton className='bg-gray-100 animate-pulse h-4 w-20 sm:w-[100px]' />
+      </TableCell>
+      <TableCell>
+        <Skeleton className='bg-gray-100 animate-pulse h-4 w-20 sm:w-[100px]' />
+      </TableCell>
+      <TableCell>
+        <Skeleton className='bg-gray-100 animate-pulse h-4 w-28 sm:w-[250px]' />
+      </TableCell>
+      <TableCell>
+        <Skeleton className='bg-gray-100 animate-pulse h-4 w-12 sm:w-[50px]' />
+      </TableCell>
+      <TableCell>
+        <Skeleton className='bg-gray-100 animate-pulse h-4 w-16 sm:w-[80px]' />
+      </TableCell>
+      <TableCell>
+        <Skeleton className='bg-gray-100 animate-pulse h-4 w-16 sm:w-[80px]' />
+      </TableCell>
+    </TableRow>
+  ));
+
 export function SalesInfo() {
   const location = useLocation();
   const orders = useSelector((state: any) => state.data);
   const merchant = useSelector((state: any) => state.merchant);
+  const loading = useSelector((state: any) => state.loading);
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [showModal, setShowModal] = useState(false);
@@ -83,8 +140,6 @@ export function SalesInfo() {
     return filteredOrders.slice(indexOfFirstOrder, indexOfLastOrder);
   }, [filteredOrders, currentPage, ordersPerPage]);
 
-  const totalPages = Math.ceil(filteredOrders.length / ordersPerPage);
-
   useEffect(() => {
     dispatch(getMerchant(id));
     dispatch(fetchOrderData({ merchantId } as any));
@@ -100,9 +155,9 @@ export function SalesInfo() {
 
   return (
     <div
-      className={` bg-white ${
-        window.innerWidth > 768 ? `ml-16` : `ml-14`
-      }  bg-[#1100770A] min-h-[100vh]`}
+      className={`bg-white ${
+        window.innerWidth > 768 ? "ml-16" : "ml-14"
+      } bg-[#1100770A] min-h-[100vh]`}
     >
       <div className='container mx-auto p-4 bg-background min-h-screen'>
         <div className='flex items-center justify-between mb-6'>
@@ -115,23 +170,37 @@ export function SalesInfo() {
               className='bg-[#533AE9] lg:w-[15%] w-[50%] h-[5vh] text-[#fff] mr-[5%] rounded-md flex justify-center items-center'
               onClick={toggleModal}
             >
+              {loading ? (
+                <Loader2 className='h-4 w-4 animate-spin mr-2' />
+              ) : null}
               Withdraw
             </Button>
           )}
         </div>
 
         <div className='grid md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6'>
-          <AnalyticCard
-            title='Sales'
-            amount={`₦${numberWithCommas(merchant?.walletBalance) || 0}`}
-          />
-          <AnalyticCard
-            title='Balance'
-            amount={`₦${numberWithCommas(merchant?.availableBalance) || 0}`}
-          />
+          {loading ? (
+            <>
+              <LoadingAnalyticCard title='Sales' />
+              <LoadingAnalyticCard title='Balance' />
+            </>
+          ) : (
+            <>
+              <AnalyticCard
+                title='Sales'
+                amount={`₦${numberWithCommas(merchant?.walletBalance) || 0}`}
+              />
+              <AnalyticCard
+                title='Balance'
+                amount={`₦${numberWithCommas(merchant?.availableBalance) || 0}`}
+              />
+            </>
+          )}
           <Select defaultValue='today'>
             <SelectTrigger className='w-full bg-white'>
-              <SelectValue placeholder='Select Date Range' />
+              <SelectValue
+                placeholder={loading ? "Loading..." : "Select Date Range"}
+              />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value='today'>Today ({getCurrentDate()})</SelectItem>
@@ -148,6 +217,7 @@ export function SalesInfo() {
             className='pl-8 bg-white'
             value={searchQuery}
             onChange={handleSearchChange}
+            disabled={loading}
           />
         </div>
 
@@ -156,6 +226,7 @@ export function SalesInfo() {
             <TableHeader>
               <TableRow>
                 <TableHead>ID</TableHead>
+                <TableHead>Product</TableHead>
                 <TableHead>Product name</TableHead>
                 <TableHead>Quantity</TableHead>
                 <TableHead>Total Price</TableHead>
@@ -166,20 +237,23 @@ export function SalesInfo() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {currentOrders && currentOrders.length > 0 ? (
+              {loading ? (
+                // [...Array(5)].map((_, index) => <SkeletonRow key={index} />)
+                <TableLoadingSkeleton />
+              ) : currentOrders && currentOrders.length > 0 ? (
                 currentOrders.map((order: any, index: number) => (
                   <TableRow key={index}>
                     <TableCell>
                       #{(currentPage - 1) * ordersPerPage + index + 1}
                     </TableCell>
-                    <TableCell className='flex items-center'>
+                    <TableCell>
                       <img
                         src={order.productImage}
                         alt={order.productName}
                         className='h-8 w-8 mr-2 object-cover rounded'
                       />
-                      {order.productName}
                     </TableCell>
+                    <TableCell className=''>{order.productName}</TableCell>
                     <TableCell>{order?.quantity}</TableCell>
                     <TableCell>₦{numberWithCommas(order.totalPrice)}</TableCell>
                     <TableCell>{order.users.firstname}</TableCell>
@@ -200,13 +274,16 @@ export function SalesInfo() {
             </TableBody>
           </Table>
         </Card>
-        <div className='mt-4 flex justify-center'>
-          <Pagination
-            currentPage={currentPage}
-            totalPages={Math.ceil(filteredOrders.length / ordersPerPage)}
-            onPageChange={handlePageChange}
-          />
-        </div>
+
+        {!loading && (
+          <div className='mt-4 flex justify-center'>
+            <Pagination
+              currentPage={currentPage}
+              totalPages={Math.ceil(filteredOrders.length / ordersPerPage)}
+              onPageChange={handlePageChange}
+            />
+          </div>
+        )}
 
         {showModal && (
           <WithdrawModal isOpen={showModal} onClose={toggleModal} />

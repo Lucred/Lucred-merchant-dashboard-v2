@@ -57,7 +57,7 @@ export function WithdrawModal({ isOpen, onClose }: WithdrawModalProps) {
               />
             </div>
           </div>
-          <DialogFooter>
+          <DialogFooter className='gap-2 lg:gap-0'>
             <Button type='button' variant='outline' onClick={onClose}>
               Cancel
             </Button>

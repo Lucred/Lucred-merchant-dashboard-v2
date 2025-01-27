@@ -121,7 +121,7 @@ export const TextAreaInput = ({
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { ImagePlus, MoveLeft } from "lucide-react";
+import { ImagePlus, Loader2, MoveLeft } from "lucide-react";
 import { Button } from "../../components/ui/button";
 import { Card, CardContent } from "../../components/ui/card";
 import { Input } from "../../components/ui/input";
@@ -143,18 +143,8 @@ import {
 } from "../../redux/actions";
 import ErrorBoundary from "../../components/ErrorBoundary";
 import { toast } from "react-toastify";
-
-interface Category {
-  _id: string;
-  name: string;
-  description: string;
-  coverImage: string;
-  subCategories: string[];
-  featuredCategories: boolean;
-  totalMerchants: number;
-  createdAt: string;
-  updatedAt: string;
-}
+import { Category } from "@/interface";
+import ProductFormSkeleton from "../../components/ProductSkeleton";
 
 export default function AddProductPage() {
   return (
@@ -167,6 +157,7 @@ export default function AddProductPage() {
 function AddProduct() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const loading = useSelector((state: any) => state.loading);
   const { productId } = useParams();
   const id = localStorage.getItem("merchantId") as string;
   const [imagePreview, setImagePreview] = useState<string>("");
@@ -175,8 +166,6 @@ function AddProduct() {
   const [error, setError] = useState<string | null>(null);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  // const [originalImageUrl, setOriginalImageUrl] = useState<string>("");
-  const [isAvailable, setIsAvailable] = useState<boolean>(true);
 
   const [formData, setFormData] = useState({
     title: "",
@@ -288,6 +277,7 @@ function AddProduct() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsButtonDisabled(true);
+    setIsLoading(true);
     setError(null);
 
     if (!validateForm()) {
@@ -342,14 +332,20 @@ function AddProduct() {
       }
     } catch (error: any) {
       setIsButtonDisabled(false);
+      setIsLoading(false);
       const errorMessage =
         error.message || "An error occurred while updating the product";
       toast.error(errorMessage);
       setError(errorMessage);
     } finally {
       setIsButtonDisabled(false);
+      setIsLoading(false);
     }
   };
+
+  if (loading) {
+    return <ProductFormSkeleton />;
+  }
 
   return (
     <div
@@ -623,7 +619,7 @@ function AddProduct() {
                   >
                     {isLoading ? (
                       <div className='flex items-center gap-2'>
-                        <span className='animate-spin'>⊚</span>
+                        <Loader2 className='h-4 w-4 animate-spin mr-2' />
                         {productId ? "Updating..." : "Adding..."}
                       </div>
                     ) : productId ? (
