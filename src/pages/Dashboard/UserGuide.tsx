@@ -24,7 +24,7 @@ const UserGuide = () => {
   return (
     <div
       className={`bg-white ${
-        window.innerWidth > 768 ? `ml-16` : `ml-12`
+        window.innerWidth > 768 ? `ml-16` : `ml-14`
       } bg-[#1100770A] min-h-[100vh]`}
     >
       <div className='mx-auto p-4 pb-20'>

@@ -155,7 +155,10 @@ const UserReport = () => {
               </thead>
               <tbody>
                 {orders.map((order: any, index: number) => (
-                  <tr className='text-[0.8rem] text-[#56555B] text-center w-[100%] '>
+                  <tr
+                    key={index}
+                    className='text-[0.8rem] text-[#56555B] text-center w-[100%] '
+                  >
                     <td className='font-[400] flex gap-3 justify-left items-center h-[7vh] ml-10'>
                       <img src={customer1} alt='' className='h-[3vh] ' />{" "}
                       {order.users.firstname} {order.users.lastname}

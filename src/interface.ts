@@ -89,3 +89,20 @@ export interface Category {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface Order {
+  id: string;
+  productName: string;
+  createdAt: string;
+  totalPrice: number;
+}
+
+export interface Merchant {
+  id: string;
+  // Add other merchant properties as needed
+}
+
+export interface RootState {
+  data: Order[];
+  merchant: Merchant;
+}

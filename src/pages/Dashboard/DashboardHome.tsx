@@ -86,7 +86,7 @@ export default function DashboardHome() {
           <CardHeader>
             <div className='flex flex-col sm:flex-row sm:items-center justify-between gap-2'>
               <CardTitle className='text-base sm:text-lg'>
-                Top Transactions
+                Latest Products
               </CardTitle>
             </div>
           </CardHeader>
