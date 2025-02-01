@@ -28,8 +28,9 @@ import {
 } from "../../components/ui/alert-dialog";
 import { Skeleton } from "../../components/ui/skeleton";
 import { getProducts, deleteProduct } from "../../redux/actions";
-import Pagination from "../../components/Pagination";
+
 import { numberWithCommas } from "../../utils";
+import Pagination from "../../components/Pagination";
 
 const DashboardProduct = () => {
   const dispatch = useDispatch() as unknown as any;
@@ -46,15 +47,17 @@ const DashboardProduct = () => {
 
   // Filter products based on search query
   const filteredProducts = useMemo(() => {
-    return productArray.filter((product: any) => {
-      const searchString = searchQuery.toLowerCase();
-      return (
-        product.title?.toLowerCase().includes(searchString) ||
-        product.category?.toLowerCase().includes(searchString) ||
-        product.subCategory?.toLowerCase().includes(searchString) ||
-        product.description?.toLowerCase().includes(searchString)
-      );
-    });
+    return productArray
+      .filter((product: any) => {
+        const searchString = searchQuery.toLowerCase();
+        return (
+          product.title?.toLowerCase().includes(searchString) ||
+          product.category?.toLowerCase().includes(searchString) ||
+          product.subCategory?.toLowerCase().includes(searchString) ||
+          product.description?.toLowerCase().includes(searchString)
+        );
+      })
+      .reverse();
   }, [productArray, searchQuery]);
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -65,7 +68,9 @@ const DashboardProduct = () => {
     const indexOfLastProduct = currentPage * productsPerPage;
     const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
     return filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct);
-  }, [filteredProducts, currentPage]);
+  }, [filteredProducts, currentPage, productsPerPage]);
+
+  // const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
 
   // Reset to first page when search query changes
   useEffect(() => {
