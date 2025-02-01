@@ -1,3 +1,4 @@
+import { formatDate } from "./../utils/index";
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createAsyncThunk } from "@reduxjs/toolkit";
@@ -139,7 +140,6 @@ export const createProducts = createAsyncThunk(
       dispatch(fetchDataStart);
       const response = await FormDataPost(`/products`, formData);
       dispatch(fetchProduct(response.data.data));
-      console.log(response.data.message);
     } catch (error: any) {
       toast.error(error.message);
       dispatch(fetchDataFailure(error.response.data.error));
@@ -158,7 +158,6 @@ export const getProducts = createAsyncThunk<void, { id: string }>(
         `/products?merchantId=${id}&page=1&size=9999999999`
       );
       dispatch(fetchProduct(response.data.data));
-      console.log(response.data.data);
     } catch (error: any) {
       toast.error(error.message);
       dispatch(
@@ -270,14 +269,16 @@ export const updateProfile = createAsyncThunk(
 /**==============Update Profile=======  **/
 export const withdraw = createAsyncThunk(
   "withdraw",
-  async (formData: any, { dispatch }) => {
+  async (formatData: any, { rejectWithValue, dispatch }) => {
     try {
       dispatch(fetchDataStart);
-      const response = await apiPost(`/merchants/withdraw`, formData);
-      toast.success(response.data.message);
+      const response = await apiPost("/merchants/withdraw", formatData);
+
+      return response.data;
     } catch (error: any) {
-      toast.error(error.response.data.message);
-      dispatch(fetchDataFailure(error.response.data.error));
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to process withdrawal"
+      );
     }
   }
 );
