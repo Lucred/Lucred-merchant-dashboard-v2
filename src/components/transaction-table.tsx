@@ -10,11 +10,13 @@ import {
 import { fetchOrderData, getMerchant } from "../redux/actions";
 import { useEffect } from "react";
 import { formatDate, numberWithCommas } from "../utils";
+import { Order, RootState } from "@/interface";
 
 export default function TransactionTable() {
-  const orders = useSelector((state: any) => state.data);
-  const merchant = useSelector((state: any) => state.merchant);
-  const dispatch = useDispatch() as unknown as any;
+  const orders = useSelector((state: RootState) => state.data);
+  const merchant = useSelector((state: RootState) => state.merchant);
+  const dispatch = useDispatch<any>();
+
   const id = localStorage.getItem("userId") as string;
   const merchantId = localStorage.getItem("merchantId");
 
@@ -22,6 +24,10 @@ export default function TransactionTable() {
     dispatch(getMerchant(id));
     dispatch(fetchOrderData({ merchantId } as any));
   }, [id, merchantId, dispatch]);
+
+  const sortedOrders = [...orders].sort(
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+  );
 
   return (
     <Table>
@@ -34,7 +40,7 @@ export default function TransactionTable() {
         </TableRow>
       </TableHeader>
       <TableBody className='bg-white'>
-        {orders.slice(0, 3).map((order: any, index: number) => (
+        {sortedOrders.slice(0, 3).map((order: Order, index: number) => (
           <TableRow key={order.id}>
             <TableCell>#{index + 1}</TableCell>
             <TableCell>{order.productName}</TableCell>

@@ -9,8 +9,14 @@ export default function TopProduct() {
 
   const products = useSelector((state: any) => state.product);
 
-  const productArray = useMemo(() => {
-    return Array.isArray(products) ? products : [];
+  const sortedProducts = useMemo(() => {
+    if (!Array.isArray(products)) return [];
+
+    return [...products].sort((a, b) => {
+      const dateA = new Date(a.createdAt).getTime();
+      const dateB = new Date(b.createdAt).getTime();
+      return dateB - dateA;
+    });
   }, [products]);
 
   useEffect(() => {
@@ -21,20 +27,19 @@ export default function TopProduct() {
     };
     fetchProducts();
   }, [dispatch, id]);
+
   return (
     <div className='space-y-4'>
-      <p className='text-sm text-muted-foreground'>
-        Top 3 of the week based on total sold
-      </p>
+      <p className='text-sm text-muted-foreground'>Latest 3 products</p>
       <div className='flex justify-between items-center'>
-        {productArray.slice(0, 3).map((product) => (
+        {sortedProducts.slice(0, 3).map((product) => (
           <div
             key={product._id}
             className='border flex justify-center items-center rounded-md h-40 w-24 overflow-hidden bg-white'
           >
             <img
               src={product?.coverImage}
-              alt='Product 1'
+              alt={`Product ${product.name || ""}`}
               width={96}
               height={96}
               className='object-cover'

@@ -1,15 +1,22 @@
 import { useState, useEffect } from "react";
 import { fetchVideos } from "../../api/video";
-import { Video } from "types/video";
+import { Video } from "../../../types/video";
+import { Skeleton } from "../../components/ui/skeleton";
 
 const UserGuide = () => {
   const [videos, setVideos] = useState<Video[]>([]);
   const [selectedVideo, setSelectedVideo] = useState<Video | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const loadVideos = async () => {
-      const fetchedVideos = await fetchVideos();
-      setVideos(fetchedVideos);
+      setIsLoading(true);
+      try {
+        const fetchedVideos = await fetchVideos();
+        setVideos(fetchedVideos);
+      } finally {
+        setIsLoading(false);
+      }
     };
     loadVideos();
   }, []);
@@ -17,7 +24,7 @@ const UserGuide = () => {
   return (
     <div
       className={`bg-white ${
-        window.innerWidth > 768 ? `ml-16` : `ml-12`
+        window.innerWidth > 768 ? `ml-16` : `ml-14`
       } bg-[#1100770A] min-h-[100vh]`}
     >
       <div className='mx-auto p-4 pb-20'>
@@ -27,10 +34,30 @@ const UserGuide = () => {
             video={selectedVideo}
             onClose={() => setSelectedVideo(null)}
           />
+        ) : isLoading ? (
+          <LoadingVideoGrid />
         ) : (
           <YouTubeVideoGrid videos={videos} onVideoSelect={setSelectedVideo} />
         )}
       </div>
+    </div>
+  );
+};
+
+const LoadingVideoGrid = () => {
+  return (
+    <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'>
+      {Array(8)
+        .fill(0)
+        .map((_, index) => (
+          <div key={index} className='space-y-3'>
+            <Skeleton className='w-full bg-gray-100 animate-pulse h-48 rounded-lg' />
+            <div className='space-y-2'>
+              <Skeleton className='bg-gray-100 animate-pulse h-4 w-3/4' />
+              <Skeleton className='bg-gray-100 animate-pulse h-4 w-1/2' />
+            </div>
+          </div>
+        ))}
     </div>
   );
 };
@@ -67,6 +94,8 @@ interface YouTubeVideoPlayerProps {
 }
 
 const YouTubeVideoPlayer = ({ video, onClose }: YouTubeVideoPlayerProps) => {
+  const [isLoading, setIsLoading] = useState(true);
+
   return (
     <div className='relative'>
       <button
@@ -75,12 +104,17 @@ const YouTubeVideoPlayer = ({ video, onClose }: YouTubeVideoPlayerProps) => {
       >
         ✕
       </button>
-      <div className='w-full aspect-video'>
+      <div className='w-full aspect-video relative'>
+        {isLoading && (
+          <Skeleton className='bg-gray-100 animate-pulse absolute inset-0 rounded-lg' />
+        )}
         <iframe
           src={`https://www.youtube.com/embed/${video.videoUrl}?autoplay=1`}
           title={video.title}
           className='w-full h-full rounded-lg'
           allowFullScreen
+          onLoad={() => setIsLoading(false)}
+          style={{ visibility: isLoading ? "hidden" : "visible" }}
         />
       </div>
       <h2 className='mt-4 text-xl font-bold'>{video.title}</h2>

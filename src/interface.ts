@@ -77,3 +77,32 @@ export interface OrderData {
 export interface TokenData {
   token: string;
 }
+
+export interface Category {
+  _id: string;
+  name: string;
+  description: string;
+  coverImage: string;
+  subCategories: string[];
+  featuredCategories: boolean;
+  totalMerchants: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Order {
+  id: string;
+  productName: string;
+  createdAt: string;
+  totalPrice: number;
+}
+
+export interface Merchant {
+  id: string;
+  // Add other merchant properties as needed
+}
+
+export interface RootState {
+  data: Order[];
+  merchant: Merchant;
+}

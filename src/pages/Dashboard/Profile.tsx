@@ -1,97 +1,3 @@
-// import { Link } from 'react-router-dom'
-// import profille from '../../assets/profille.png'
-// import { SelectInput, TextInput } from './DashboardAddProduct'
-// import { useEffect, useRef, useState } from 'react'
-// import { getMerchant, updateLogo } from '../../redux/actions'
-// import { useDispatch, useSelector } from 'react-redux'
-
-// const Profile = () => {
-//     const [imgFile, setImgFile] = useState('')
-
-//     const [imageData, setimageData] = useState<any>({})
-
-//     const [formData, setFormData] = useState<any>({})
-
-//     const id = localStorage.getItem("userId") as string
-//     const logo = localStorage.getItem("logo")
-//     const dispatch = useDispatch() as unknown as any
-
-//     const inputRef = useRef<any>()
-
-//     const handleRef = () => {
-//         inputRef.current.click()
-//     }
-
-//     const handleLogoChange = (e: any) => {
-//         setImgFile(URL.createObjectURL(e.target.files[0]))
-//         setimageData({
-//             ...imageData, [e.target.name]: e.target.files[0]
-//         })
-//     }
-
-//     const handleLogo = async (e: any) => {
-//         e.preventDefault()
-//         await dispatch(updateLogo({ id, imageData }))
-//     }
-
-//     const handleChange = (e: any) => {
-//         setimageData({
-//             ...formData, [e.target.name]: e.target.files[0]
-//         })
-//     }
-
-//     const merchant = useSelector((state: any) => state.merchant)
-
-//     console.log(merchant)
-
-//     useEffect(() => {
-//         dispatch(getMerchant(id))
-//     }, [])
-
-//     return (
-//         <div className={`${window.innerWidth > 768 ? `ml-[15%]` : `ml-[10%]`} mr-[5%] bg-[#1100770A] min-h-[100vh]`} >
-//             <div className='mx-[3%]'>
-//                 <div className="flex items-center justify-between">
-//                     <div className='py-[1%]'>
-//                         <p className='text-[0.7rem]'>Dashboard/Profile</p>
-//                         <h3 className='text-[1.3rem] font-[500]'>Profile</h3>
-//                     </div>
-//                 </div>
-//                 <div className='bg-[#533AE9] mb-[6%] px-[1%] rounded-md flex items-end'>
-//                     <div className='flex items-end h-[20vh]'>
-//                         <div className='bg-[#fff] w-[150px] h-[150px] rounded-[50%] flex items-center justify-center mb-[-21%]' >
-//                             {!imgFile ? <img src={logo || profille} alt="" className='w-[150px] h-[150px] object-cover object-top rounded-[50%]' onClick={handleRef} /> :
-//                                 <img src={imgFile} alt="" className='w-[150px] h-[150px] object-cover object-top rounded-[50%]' onClick={handleRef} />}
-//                             <input name="logo" type="file" ref={inputRef} onChange={handleLogoChange} className="hidden" />
-//                         </div>
-//                         {/* <p onClick={handleLogo}>Enter</p> */}
-//                         <h3 className='text-[1.3rem] font-[500] text-[#fff] ml-[10px]'>{merchant.firstname + ' ' + merchant.lastname}</h3>
-
-//                     </div>
-
-//                 </div>
-//                 <button onClick={handleLogo} className='bg-[#533AE9] text-[#fff]'>update logo</button>
-//                 <div className=' py-[2%] px-[1%] rounded-md lg:grid grid-cols-2 grid-rows-4 gap-x-8 mt-[15%] lg:mt-[0%]' >
-//                     <TextInput label='Email Address' placeholder='Email Address' type='email' value={merchant.email} onChange={handleChange} readonly={true} />
-//                     <TextInput label='Account Name' placeholder='Account Name' onChange={handleChange} value={merchant.bankAccountInfo?.accountName} readonly={true} />
-//                     <TextInput label='Company Name' placeholder='Company Name' onChange={handleChange} value={merchant.companyName} readonly={true} />
-//                     <TextInput label='Account Number' placeholder='Account Number' type='number' onChange={handleChange} value={merchant.bankAccountInfo?.accountNumber} readonly={true} />
-//                     <TextInput label='Contact Number' placeholder='Contact Number' type='number' onChange={handleChange} value={merchant.phone} readonly={true} />
-//                     <TextInput label='Bank Name' placeholder='Bank Name' onChange={handleChange} value={merchant.bankAccountInfo?.bankName} readonly={true} />
-//                     <TextInput label='Address' placeholder='Address' value={"N/A"} onChange={handleChange} readonly={true} />
-//                     <SelectInput label='Country' value='Country' onChange={handleChange} readonly={true} />
-//                 </div>
-//                 <div className='flex justify-end'>
-//                     <Link to="/dashboard/settings" className='bg-[#533AE9] w-[50%] lg:w-[10%] h-[5vh] text-[#fff] rounded-md flex justify-center items-center'>Edit</Link>
-//                 </div>
-//             </div>
-
-//         </div>
-//     )
-// }
-
-// export default Profile
-
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -118,6 +24,54 @@ import {
   SelectValue,
 } from "../../components/ui/select";
 
+const ProfileSkeleton = () => {
+  return (
+    <div className='bg-white ml-12 bg-[#1100770A] min-h-screen'>
+      <div className='container mx-auto p-4'>
+        <Card>
+          <CardHeader>
+            <div className='h-7 w-24 bg-gray-200 rounded animate-pulse' />
+          </CardHeader>
+          <CardContent>
+            {/* Profile Header Section */}
+            <div className='mb-6 bg-[#533ae9] p-3 rounded-md'>
+              <div className='flex items-center space-x-4'>
+                {/* Avatar Skeleton */}
+                <div className='w-24 h-24 rounded-full bg-white/30 animate-pulse' />
+
+                <div className='space-y-3'>
+                  {/* Name Skeleton */}
+                  <div className='h-8 w-48 bg-white/30 rounded animate-pulse' />
+                  {/* Button Skeleton */}
+                  <div className='h-9 w-32 bg-white rounded animate-pulse' />
+                </div>
+              </div>
+            </div>
+
+            {/* Form Grid */}
+            <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
+              {/* Generate 8 form field skeletons */}
+              {Array.from({ length: 8 }).map((_, index) => (
+                <div key={index} className='space-y-2'>
+                  {/* Label Skeleton */}
+                  <div className='h-5 w-24 bg-gray-200 rounded animate-pulse' />
+                  {/* Input Skeleton */}
+                  <div className='h-10 w-full bg-gray-200 rounded animate-pulse' />
+                </div>
+              ))}
+            </div>
+
+            {/* Edit Button Skeleton */}
+            <div className='mt-6 flex justify-end'>
+              <div className='h-10 w-20 bg-gray-200 rounded animate-pulse' />
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
+};
+
 const Profile = () => {
   const [imgFile, setImgFile] = useState("");
   const [imageData, setImageData] = useState<any>({});
@@ -126,6 +80,8 @@ const Profile = () => {
   const id = localStorage.getItem("userId") as string;
   const logo = localStorage.getItem("logo");
   const dispatch = useDispatch() as unknown as any;
+  const loading = useSelector((state: any) => state.loading);
+  const [isLoading, setIsLoading] = useState(true);
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -158,8 +114,19 @@ const Profile = () => {
   const merchant = useSelector((state: any) => state.merchant);
 
   useEffect(() => {
-    dispatch(getMerchant(id));
+    const fetchData = async () => {
+      try {
+        await dispatch(getMerchant(id));
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchData();
   }, [dispatch, id]);
+
+  if (isLoading) {
+    return <ProfileSkeleton />;
+  }
 
   return (
     <div
